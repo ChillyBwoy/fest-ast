@@ -16,7 +16,7 @@
   function getText (chars) {
     return {
       type: 'text',
-      body: chars.join('')
+      body: chars.join('').trim()
     };
   }
 
@@ -24,6 +24,7 @@
     return {
       type: 'node',
       name: obj.name,
+      params: '',
       attrs: attrs.reduce(function (prev, curr) {
         prev[curr[0]] = curr[1];
         return prev;
@@ -35,8 +36,6 @@
 
 Start =
   Element
-
-CHARS = [^<\n\r]+
 
 WS
   = [\t\v\f \u00A0\uFEFF]
@@ -58,6 +57,8 @@ __ "white space character"
 
 _ "white space character"
   = WSEOL*
+
+CHARS = ([^<\n\r]+)
 
 STRING "string"
   = '"' string:[^"\n\r]* '"' { return string.join(""); }
@@ -113,7 +114,13 @@ TagSelf
 
 Element
   = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
-      tag.children = tag.children.concat(contents);
+      // Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu!!!!
+      if (tag.name === 'fest:params') {
+        tag.children = [];
+        tag.params += contents.filter((item) => item.type === 'text').map((item) => item.body).join('');
+      } else {
+        tag.children = tag.children.concat(contents);
+      }
       return tag;
     }
   / _ tag:TagSelf {
@@ -122,13 +129,14 @@ Element
 
 ElementContent
   = CData
+  / Comment
   / Element
   / ElementValue
 
 ElementValue
-   = chars:CHARS {
-     return getText(chars);
-   }
+  = _ chars:CHARS _ {
+      return getText(chars);
+    }
 
 CData "CDATA"
   = '<![CDATA[' content:CDataContent {

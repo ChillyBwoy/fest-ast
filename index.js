@@ -3,7 +3,7 @@ const fs = require('fs');
 const PEG = require('pegjs');
 
 const grammar = fs.readFileSync('grammars/fest.pegjs', 'utf8');
-const template = fs.readFileSync('templates/simple.xml', 'utf8');
+const template = fs.readFileSync('templates/simple-with-params.xml', 'utf8');
 
 const parser = PEG.buildParser(grammar);
 let ast = parser.parse(template);
