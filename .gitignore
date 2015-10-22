@@ -1,6 +1,7 @@
 .DS_Store
 .jscsrc
 .jshintrc
-npm-debug.log
+
+*.log
 
 node_modules
