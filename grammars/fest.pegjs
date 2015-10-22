@@ -2,23 +2,32 @@ start =
     element
 
 validchar = [0-9a-zA-Z\-_\{\}\.\:\/]
-    
+
 _ = [ \t\r\n]*
 
+tagText =
+   _ content:validchar+ _ {
+      return {
+          type: 'text',
+          body: content.join('')
+      };
+   }
 
-tagAttrs = 
+tagAttrs =
     _ name:validchar+ '="' value:validchar+ '"' _ {
      return [name.join(''), value.join('')];
    }
 
-tagOpen = 
+tagOpen =
     _ "<fest:" chars:validchar+ attrs:tagAttrs* ">" _ {
        return {
+         type: 'node',
          name: chars.join(''),
          attrs: attrs.reduce(function (prev, curr) {
              prev[curr[0]] = curr[1];
              return prev;
-         }, {})
+         }, {}),
+         children: []
        };
     }
 
@@ -29,20 +38,22 @@ tagClose =
        };
     }
 
-tagSelf = 
+tagSelf =
     _ "<fest:" chars:validchar+  attrs:tagAttrs* "/>" _ {
        return {
+         type: 'node',
          name: chars.join(''),
          attrs: attrs.reduce(function (prev, curr) {
              prev[curr[0]] = curr[1];
              return prev;
-         }, {})
+         }, {}),
+         children: []
        };
     }
 
-element = 
-    text:validchar {
-       return '';
+element =
+    text:validchar+ {
+       return text.join('');
     }
   / tag:tagSelf{
         return tag;
@@ -50,6 +61,11 @@ element =
   / open:tagOpen close:tagClose {
         return open;
     }
+  / open:tagOpen all:tagText+ close:tagClose {
+        open.children = open.children.concat(all);
+        return open;
+    }
   / open:tagOpen all:element+ close:tagClose {
-        return [open].concat([all]);
+        open.children = open.children.concat(all);
+        return open;
     }
