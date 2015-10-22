@@ -9,7 +9,7 @@
 					</fest:attribute>
 				</fest:each>
 			</fest:attributes>
-
+			<div>foo</div>	
 			<fest:if test="params.htmlPrepend">
 				<fest:value output="text">params.htmlPrepend</fest:value>
 			</fest:if>

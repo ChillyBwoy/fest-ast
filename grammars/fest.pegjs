@@ -1,7 +1,42 @@
-start =
-  element
+{
+  function getComment (content) {
+    return {
+      type: 'comment',
+      body: content
+    };
+  }
 
-validchar = [0-9a-zA-Z\-_\{\}\.\:\/]
+  function getCData (content) {
+    return {
+      type: 'cdata',
+      body: content
+    };
+  }
+
+  function getText (chars) {
+    return {
+      type: 'text',
+      body: chars.join('')
+    };
+  }
+
+  function getNode (obj, attrs) {
+    return {
+      type: 'node',
+      name: obj.name,
+      attrs: attrs.reduce(function (prev, curr) {
+        prev[curr[0]] = curr[1];
+        return prev;
+      }, {}),
+      children: []
+    };
+  }
+}
+
+Start =
+  Element
+
+CHARS = [^<\n\r]+
 
 WS
   = [\t\v\f \u00A0\uFEFF]
@@ -29,71 +64,92 @@ STRING "string"
   / "'" string:[^'\n\r]* "'" { return string.join(""); }
 
 
+NameStartChar
+  = [A-Z] / "_" / [a-z] / [\u00C0-\u00D6] / [\u00D8-\u00F6]
+  / [\u00F8-\u02FF] / [\u0370-\u037D] / [\u037F-\u1FFF] / [\u200C-\u200D]
+  / [\u2070-\u218F] / [\u2C00-\u2FEF] / [\u3001-\uD7FF] / [\uF900-\uFDCF] / [\uFDF0-\uFFFD]
+
+NameChar
+  = NameStartChar / "-" / "." / [0-9] / [\u00B7] / [\u0300-\u036F] / [\u203F-\u2040]
+
+Identifier
+  = first:NameStartChar last:NameChar* {
+      return first + last.join("");
+    }
+
+Identity "qualified identifier"
+	= prefix:Identifier ':' id:Identifier {
+      return {
+        name: prefix + ':' + id,
+        prefix: prefix,
+        id: id
+      };
+    }
+	/ id:Identifier {
+      return {
+        name: id,
+        id: id
+      };
+    }
 
 
+Attribute
+  = _ identity:Identity value:( _ '=' _ value:STRING { return value; } )? {
+      return [identity.name, value];
+    }
 
+TagOpen
+  = '<' identity:Identity attrs:Attribute* _ '>' {
+    return getNode(identity, attrs);
+  }
 
-tagText
-   = _ content:validchar+ _ {
-     return {
-       type: 'text',
-       body: content.join('')
-     };
+TagClose
+  = '</' Identity '>'
+
+TagSelf
+  = '<' identity:Identity+ attrs:Attribute* _ '/>' {
+    return getNode(identity, attrs);
+  }
+
+Element
+  = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
+      tag.children = tag.children.concat(contents);
+      return tag;
+    }
+  / _ tag:TagSelf {
+      return tag;
+    }
+
+ElementContent
+  = CData
+  / Element
+  / ElementValue
+
+ElementValue
+   = chars:CHARS {
+     return getText(chars);
    }
 
-tagAttrs
-  = _ name:validchar+ '="' value:validchar+ '"' _ {
-    return [name.join(''), value.join('')];
-   }
+CData "CDATA"
+  = '<![CDATA[' content:CDataContent {
+      return getCData(content);
+    }
 
-tagOpen
-  = _ "<fest:" chars:validchar+ attrs:tagAttrs* ">" _ {
-    return {
-      type: 'node',
-      name: chars.join(''),
-      attrs: attrs.reduce(function (prev, curr) {
-        prev[curr[0]] = curr[1];
-        return prev;
-      }, {}),
-      children: []
-    };
+CDataContent
+  = ']]>'
+  / head:. tail:CDataContent {
+      return head + tail;
+    }
+
+Comment "comment"
+  = '<!--' content:CommentContent {
+    return getComment(content);
   }
 
-tagClose
-  = _ "</fest:" chars:validchar+ ">" _ {
-    return {
-      name: chars.join('')
-    };
-  }
-
-tagSelf
-  = _ "<fest:" chars:validchar+  attrs:tagAttrs* "/>" _ {
-    return {
-      type: 'node',
-      name: chars.join(''),
-      attrs: attrs.reduce(function (prev, curr) {
-        prev[curr[0]] = curr[1];
-        return prev;
-      }, {}),
-      children: []
-    };
-  }
-
-element
-  = text:validchar+ {
-    return text.join('');
-  }
-  / tag:tagSelf{
-    return tag;
-  }
-  / open:tagOpen close:tagClose {
-    return open;
-  }
-  / open:tagOpen all:tagText+ close:tagClose {
-    open.children = open.children.concat(all);
-    return open;
-  }
-  / open:tagOpen all:element+ close:tagClose {
-    open.children = open.children.concat(all);
-    return open;
+CommentContent
+  = '-->' {
+      return '';
+    }
+  / head:. tail:CommentContent {
+    return head + tail;
   }
