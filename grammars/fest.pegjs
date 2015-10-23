@@ -1,36 +1,41 @@
 {
   function getComment (content) {
     return {
-      type: 'comment',
+      __type: 'comment',
       body: content
     };
   }
 
   function getCData (content) {
     return {
-      type: 'cdata',
+      __type: 'cdata',
       body: content
     };
   }
 
   function getText (chars) {
     return {
-      type: 'text',
+      __type: 'text',
       body: chars.join('').trim()
     };
   }
 
   function getNode (obj, attrs) {
     return {
-      type: 'node',
-      name: obj.name,
+      __type: 'node',
+      __meta: obj,
+
       params: '',
-      attrs: attrs.reduce(function (prev, curr) {
+      attributes: attrs.reduce(function (prev, curr) {
         prev[curr[0]] = curr[1];
         return prev;
       }, {}),
       children: []
     };
+  }
+
+  function parseParams (children) {
+    return children.filter(item => item.__type === 'text').map(item => item.body).join('');
   }
 }
 
@@ -79,24 +84,24 @@ Identifier
     }
 
 Identity "qualified identifier"
-	= prefix:Identifier ':' id:Identifier {
+	= prefix:Identifier ':' name:Identifier {
       return {
-        name: prefix + ':' + id,
-        prefix: prefix,
-        id: id
+        name: name,
+        prefix: prefix || '',
+        tag: prefix + ':' + name
       };
     }
-	/ id:Identifier {
+	/ name:Identifier {
       return {
-        name: id,
-        id: id
+        tag: name,
+        name: name
       };
     }
 
 
 Attribute
   = _ identity:Identity value:( _ '=' _ value:STRING { return value; } )? {
-      return [identity.name, value];
+      return [identity.tag, value];
     }
 
 TagOpen
@@ -115,12 +120,26 @@ TagSelf
 Element
   = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
       // Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu!!!!
-      if (tag.name === 'fest:params') {
-        tag.children = [];
-        tag.params += contents.filter((item) => item.type === 'text').map((item) => item.body).join('');
+
+      if (tag.__meta.prefix === 'fest') {
+        switch (tag.__meta.name) {
+          case 'params':
+            tag.params += parseParams(contents);
+            break;
+
+          case 'get':
+            tag.params += parseParams(contents);
+            tag.children = tag.children.concat(contents.filter(child => child.__type !== 'text'));
+            break;
+
+          default:
+            tag.children = tag.children.concat(contents);
+            break;
+        }
       } else {
         tag.children = tag.children.concat(contents);
       }
+
       return tag;
     }
   / _ tag:TagSelf {
