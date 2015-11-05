@@ -35,7 +35,8 @@
   }
 
   function parseParams (children) {
-    return children.filter(item => item.__type === 'text').map(item => item.body).join('');
+    let params = children.filter(item => item.__type === 'text').map(item => item.body).join('');
+    return params;
   }
 }
 
