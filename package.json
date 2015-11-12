@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "peg:generate": "./node_modules/.bin/pegjs lib/grammars/fest.pegjs lib/parser/fest.js",
+    "peg:generate": "./node_modules/.bin/pegjs --cache --trace lib/grammars/fest.pegjs lib/parser/fest.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
