@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "peg:generate": "./node_modules/.bin/pegjs --cache --trace lib/grammars/fest.pegjs lib/parser/fest.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "peg:generate": "./node_modules/.bin/pegjs --cache lib/grammars/fest.pegjs lib/parser/fest.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.3",
-    "pegjs": "^0.9.0"
+    "pegjs": "^0.9.0",
+    "redux": "^3.0.5",
+    "redux-devtools": "^3.0.0"
   }
 }
