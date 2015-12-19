@@ -6,7 +6,7 @@
 
     var fn = function (...args) {
       var methodFn = methods.get(pred(...args));
-  		return methodFn ? methodFn(...args) : null;
+      return methodFn ? methodFn(...args) : null;
     };
 
     fn.method = function (predKey, methodFn) {
@@ -15,15 +15,6 @@
     };
 
     return fn;
-  }
-
-  function createTextNode (...args) {
-    return document.createTextNode(...args);
-  }
-
-  function createElement () {
-    let args = Array.prototype.slice.call(arguments, 0);
-    return document.createElement(...args);
   }
 
   function applyAttrs (el, attrs) {
@@ -41,9 +32,9 @@
         return (node.__meta.prefix && node.__meta.prefix === 'fest') ? node.__meta.tag : 'html';
     }
   }).method('text', (node, json) => {
-    return createTextNode(node.body);
+    return document.createTextNode(node.body);
   }).method('html', (node, json) => {
-    let el = applyAttrs(createElement(node.__meta.tag), node.attrs);
+    let el = applyAttrs(document.createElement(node.__meta.tag), node.attrs);
     node.children.forEach(child => {
       let childEl = renderNode(child, json);
       if (childEl) {
@@ -52,8 +43,8 @@
     });
     return el;
   }).method('fest:template', (node, json) => {
-    let el = createElement('div');
-    el.classList.add('root');
+    let el = document.createDocumentFragment('div');
+
     node.children.forEach(child => {
       let childEl = renderNode(child, json);
       if (childEl) {
@@ -62,7 +53,7 @@
     });
     return el;
   }).method('fest:if', (node, json) => {
-    
+
   }).method('fest:for', (node, json) => {
 
   });
@@ -72,10 +63,11 @@
   }
 
   let {fest_ast} = window;
-  let ast = fest_ast['simple.ast']();
-  let el = render(ast, {
+  let ast = fest_ast['simple.ast'];
+  let el = render(ast(), {
     done: false
   });
+  console.log(ast());
   console.log(el);
 
   document.getElementById('main').appendChild(el);
