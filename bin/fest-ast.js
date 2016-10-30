@@ -34,8 +34,9 @@ function astChildren (children, acc = []) {
   }
 }
 
-const ast = compile('min.xml');
-console.log(JSON.stringify(ast, '\n', 2));
-console.log('============');
-console.log(astNode(ast));
+const ast = compile('simple.xml');
+console.log(ast);
+// console.log(JSON.stringify(ast, '\n', 2));
+// console.log('============');
+// console.log(astNode(ast));
 // compile('simple-with-params.xml');
