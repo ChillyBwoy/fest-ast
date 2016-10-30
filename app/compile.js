@@ -1,5 +1,3 @@
-'use strict';
-
 const fs = require('fs');
 const parser = require('../lib/parser/fest.js');
 

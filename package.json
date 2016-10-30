@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "peg:generate": "./node_modules/.bin/pegjs --cache lib/grammars/fest.pegjs lib/parser/fest.js"
+    "peg:generate": "./node_modules/.bin/pegjs -o lib/parser/fest.js --cache lib/grammars/fest.pegjs"
   },
   "author": "",
   "license": "ISC",
