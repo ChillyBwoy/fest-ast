@@ -1,9 +1,13 @@
 {
+  function getNodeName (node) {
+    return node.scope ? `${node.scope}:${node.name}` : node.name;
+  }
+
   function getComment (content) {
     return {
       type: 'comment',
-      tag: null,
-      params: '',
+      node: {},
+      params: null,
       attrs: {},
       children: [content]
     };
@@ -12,28 +16,22 @@
   function getCData (content) {
     return {
       type: 'cdata',
-      tag: null,
-      params: '',
+      node: {},
+      params: null,
       attrs: {},
       children: [content]
     };
   }
 
   function getText (chars) {
-    return {
-      type: 'text',
-      tag: null,
-      params: '',
-      attrs: {},
-      children: [chars.join('').trim()]
-    };
+    return chars.join('').trim();
   }
 
-  function getNode (obj, attrs) {
+  function getNode (node, attrs) {
     return {
+      node,
       type: 'node',
-      tag: obj,
-      params: '',
+      params: null,
       attrs: attrs.reduce((prev, curr) => {
         prev[curr[0]] = curr[1];
         return prev;
@@ -42,10 +40,8 @@
     };
   }
 
-  function parseParams (children) {
-    let params = children
-      .filter(item => (typeof item !== 'string') && (item.type === 'text'))
-      .map(item => item.children).join('');
+  function parseParams (source) {
+    let params = source.filter(item => typeof item === 'string').join('');
     return params;
   }
 }
@@ -95,17 +91,17 @@ Identifier
     }
 
 Identity "qualified identifier"
-	= prefix:Identifier ':' name:Identifier {
-      return prefix + ':' + name;
+	= scope:Identifier ':' name:Identifier {
+      return { name, scope };
     }
 	/ name:Identifier {
-      return name;
+      return { name, scope: 'xml' };
     }
 
 
 Attribute
   = _ identity:Identity value:( _ '=' _ value:STRING { return value; } )? {
-      return [identity, value];
+      return [getNodeName(identity), value];
     }
 
 TagOpen
@@ -124,24 +120,37 @@ TagSelf
 Element
   = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
       // Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu!!!!
-      switch (tag.tag) {
-        case 'fest:params':
-          tag.params += parseParams(contents);
-          break;
+      const { scope, name } = tag.node;
 
-        case 'fest:get':
-          tag.params += parseParams(contents);
-          tag.children = tag.children.concat(
-            contents.filter(child => child.type !== 'text')
-          );
-          break;
+      if (scope === 'fest') {
+        switch (name) {
+          case 'params':
+            if (tag.params === null) {
+              tag.params = '';
+            }
+            tag.params += parseParams(contents);
+            break;
 
-        default:
-          tag.children = tag.children.concat(contents);
-          break;
+          case 'get':
+            if (tag.params === null) {
+              tag.params = '';
+            }
+            tag.params += parseParams(contents);
+            tag.children = tag.children.concat(
+              contents.filter(child => child.type !== 'text')
+            );
+            break;
+
+          default:
+            tag.children = tag.children.concat(contents);
+            break;
+        }
+        return tag;
+      } else {
+        tag.children = tag.children.concat(contents);
+        return tag;
       }
 
-      return tag;
     }
   / _ tag:TagSelf {
       return tag;
@@ -159,7 +168,7 @@ ElementValue
     }
 
 CData "CDATA"
-  = _ '<![CDATA[' _ content:CDataContent _ {
+  = '<![CDATA[' content:CDataContent {
       return getCData(content);
     }
 

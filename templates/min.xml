@@ -1,0 +1,17 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+  <div class="container" id="root" data-role="main">
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit
+    </p>
+    <fest:if test="params.title">
+      <fest:get name="element">
+        <fest:params>
+          {
+            baseClass: 'p-contact__title',
+            tagName: 'span'
+          }
+        </fest:params>
+      </fest:get>
+    </fest:if>
+  </div>
+</fest:template>
