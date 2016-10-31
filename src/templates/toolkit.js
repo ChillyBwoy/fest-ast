@@ -1,201 +1,88 @@
-module.exports = function(r) {
-    return function(json = {}, params = {}) {
-        return r('node', {
-            "name": "template",
-            "scope": "fest"
-        }, {
-            "fest": "http://fest.mail.ru",
-            "context_name": "json"
-        }, [r('node', {
-            "name": "set",
-            "scope": "fest"
-        }, {
-            "name": "element"
-        }, [r('node', {
-            "name": "script",
-            "scope": "fest"
-        }, {}, []), r('node', {
-            "name": "element",
-            "scope": "fest"
-        }, {
-            "name": "{(attrs.href && 'a') || params.tagName || 'div'}"
-        }, [r('node', {
-            "name": "attributes",
-            "scope": "fest"
-        }, {}, [r('node', {
-            "name": "attribute",
-            "scope": "fest"
-        }, {
-            "name": "class",
-            "value": "{baseClass}"
-        }, []), (function() {
-            var _$a = [],
-                attrName, attrValue;
-            for (attrName in attrs) {
-                if (attrs.hasOwnProperty(attrName)) {
-                    attrValue = attrs[attrName];
-                    _$a = _$a.concat([r('node', {
-                        "name": "attribute",
-                        "scope": "fest"
-                    }, {
-                        "name": "{attrName}"
-                    }, [attrValue])]);
-                }
-            }
-            return _$a;
-        }())]), (function() {
-            if (params.htmlPrepend) {
-                return params.htmlPrepend;
-            } else {
-                return null;
-            }
-        }()), (function() {
-            if (params.html) {
-                return params.html;
-            } else {
-                return null;
-            }
-        }()), (function() {
-            if (params.elem) {
-                return r('node', {
-                    "name": "get",
-                    "scope": "fest"
-                }, {
-                    "name": "element"
-                }, ['params.elem']);
-            } else {
-                return null;
-            }
-        }()), (function() {
-            if (params.elems) {
-                return (function() {
-                    var _$a = [],
-                        i, elem;
-                    for (i = 0; i < params.elems.length; i++) {
-                        elem = params.elems[i];
-                        _$a = _$a.concat([(function() {
-                            if (elem) {
-                                return r('node', {
-                                    "name": "get",
-                                    "scope": "fest"
-                                }, {
-                                    "name": "element"
-                                }, ['elem']);
-                            } else {
-                                return null;
-                            }
-                        }())]);
-                    }
-                    return _$a;
-                }());
-            } else {
-                return null;
-            }
-        }()), (function() {
-            if (params.htmlAppend) {
-                return params.htmlAppend;
-            } else {
-                return null;
-            }
-        }())])]), r('node', {
-            "name": "set",
-            "scope": "fest"
-        }, {
-            "name": "bigsearch"
-        }, [r('node', {
-            "name": "get",
-            "scope": "fest"
-        }, {
-            "name": "element"
-        }, [r('node', {
-            "name": "params",
-            "scope": "fest"
-        }, {}, []), r('node', {
-            "name": "params",
-            "scope": "fest"
-        }, {}, []), r('node', {
-            "name": "param",
-            "scope": "fest"
-        }, {
-            "name": "html"
-        }, [r('node', {
-            "name": "get",
-            "scope": "fest"
-        }, {
-            "name": "form"
-        }, [r('node', {
-            "name": "params",
-            "scope": "fest"
-        }, {}, []), r('node', {
-            "name": "param",
-            "scope": "fest"
-        }, {
-            "name": "html"
-        }, [(function() {
-            if (params.input) {
-                return r('node', {
-                    "name": "get",
-                    "scope": "fest"
-                }, {
-                    "name": "cell"
-                }, [r('node', {
-                    "name": "params",
-                    "scope": "fest"
-                }, {}, []), r('node', {
-                    "name": "param",
-                    "scope": "fest"
-                }, {
-                    "name": "html"
-                }, [r('node', {
-                    "name": "get",
-                    "scope": "fest"
-                }, {
-                    "name": "input"
-                }, [r('node', {
-                    "name": "params",
-                    "scope": "fest"
-                }, {}, [])])])]);
-            } else {
-                return null;
-            }
-        }()), (function() {
-            if (params.button) {
-                return r('node', {
-                    "name": "get",
-                    "scope": "fest"
-                }, {
-                    "name": "cell"
-                }, [r('node', {
-                    "name": "params",
-                    "scope": "fest"
-                }, {}, []), r('node', {
-                    "name": "param",
-                    "scope": "fest"
-                }, {
-                    "name": "html"
-                }, [r('node', {
-                    "name": "get",
-                    "scope": "fest"
-                }, {
-                    "name": "button"
-                }, ['params.button'])])]);
-            } else {
-                return null;
-            }
-        }()), (function() {
-            if (params.html) {
-                return params.html;
-            } else {
-                return null;
-            }
-        }())])])])])]), r('node', {
-            "name": "get",
-            "scope": "fest"
-        }, {
-            "name": "bigsearch"
-        }, [r('node', {
-            "name": "params",
-            "scope": "fest"
-        }, {}, [])])]);
-    };
+module.exports = function(ast$5f0b) {
+  return ast$5f0b('fest:template', {
+    "xmlns:fest": "http://fest.mail.ru",
+    "context_name": "json"
+  }, [ast$5f0b('fest:set', {
+    "name": "element"
+  }, [ast$5f0b('fest:script', {}, ['var blockParams = params.baseParams || params.forParams || params;var attrs = blockParams.attrs || {};var baseClass = params.baseClass || params.forClass || '
+    ';var elem = params.elem;var htmlDeep = params.htmlDeep;if (elem && htmlDeep && !elem.htmlDeep) {elem.htmlDeep = htmlDeep} else if (!elem && htmlDeep) {params.html = htmlDeep;}if (params.href) {attrs.href = params.href;}'
+  ]), ast$5f0b('fest:element', {
+    "name": "{(attrs.href && 'a') || params.tagName || 'div'}"
+  }, [ast$5f0b('fest:attributes', {}, [ast$5f0b('fest:attribute', {
+    "name": "class",
+    "value": "{baseClass}"
+  }, []), ast$5f0b('fest:each', {
+    "iterate": "attrs",
+    "index": "attrName",
+    "value": "attrValue"
+  }, [ast$5f0b('fest:attribute', {
+    "name": "{attrName}"
+  }, [ast$5f0b('fest:value', {}, ['attrValue'])])])]), ast$5f0b('fest:if', {
+    "test": "params.htmlPrepend"
+  }, [ast$5f0b('fest:value', {
+    "output": "text"
+  }, ['params.htmlPrepend'])]), ast$5f0b('fest:if', {
+    "test": "params.html"
+  }, [ast$5f0b('fest:value', {
+    "output": "text"
+  }, ['params.html'])]), ast$5f0b('fest:if', {
+    "test": "params.elem"
+  }, [ast$5f0b('fest:get', {
+    "name": "element"
+  }, ['params.elem'])]), ast$5f0b('fest:if', {
+    "test": "params.elems"
+  }, [ast$5f0b('fest:for', {
+    "iterate": "params.elems",
+    "index": "i",
+    "value": "elem"
+  }, [ast$5f0b('fest:if', {
+    "test": "elem"
+  }, [ast$5f0b('fest:get', {
+    "name": "element"
+  }, ['elem'])])])]), ast$5f0b('fest:if', {
+    "test": "params.htmlAppend"
+  }, [ast$5f0b('fest:value', {
+    "output": "text"
+  }, ['params.htmlAppend'])])])]), ast$5f0b('fest:set', {
+    "name": "bigsearch"
+  }, [ast$5f0b('fest:get', {
+    "name": "element"
+  }, [ast$5f0b('fest:params', {}, ['params']), ast$5f0b('fest:params', {}, ['{baseClass: '
+    bigsearch '}'
+  ]), ast$5f0b('fest:param', {
+    "name": "html"
+  }, [ast$5f0b('fest:get', {
+    "name": "form"
+  }, [ast$5f0b('fest:params', {}, ['params.form']), ast$5f0b('fest:param', {
+    "name": "html"
+  }, [ast$5f0b('fest:if', {
+    "test": "params.input"
+  }, [ast$5f0b('fest:get', {
+    "name": "cell"
+  }, [ast$5f0b('fest:params', {}, ['{mods: ['
+    full '],mix: ['
+    padding_right_10 ']}'
+  ]), ast$5f0b('fest:param', {
+    "name": "html"
+  }, [ast$5f0b('fest:get', {
+    "name": "input"
+  }, [ast$5f0b('fest:params', {}, ['params.input'])])])])]), ast$5f0b('fest:if', {
+    "test": "params.button"
+  }, [ast$5f0b('fest:get', {
+    "name": "cell"
+  }, [ast$5f0b('fest:params', {}, ['{mods: ['
+    right ']}'
+  ]), ast$5f0b('fest:param', {
+    "name": "html"
+  }, [ast$5f0b('fest:get', {
+    "name": "button"
+  }, ['params.button'])])])]), ast$5f0b('fest:if', {
+    "test": "params.html"
+  }, [ast$5f0b('fest:value', {
+    "output": "text"
+  }, ['params.html'])])])])])])]), ast$5f0b('fest:get', {
+    "name": "bigsearch"
+  }, [ast$5f0b('fest:params', {}, ['{form: {attrs: {method: '
+    GET ',action: ' / search / '}},"input": {"icon": {"mods": ["zoom"],"tag": "i","attrs": {}},"attrs": {"type": "text","name": "q","placeholder": "Поиск"}},"button": {"text": "Найти"}}'
+  ])])]);
 };

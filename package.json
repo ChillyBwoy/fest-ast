@@ -16,7 +16,6 @@
     "babel-preset-es2015": "^6.18.0",
     "cito": "git+ssh://git@github.com/joelrich/citojs.git",
     "fest": "git+ssh://git@gitlab.corp.mail.ru:mail/fest.git#vdom",
-    "pegjs": "^0.10.0",
-    "virtual-dom": "^2.1.1"
+    "pegjs": "^0.10.0"
   }
 }

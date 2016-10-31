@@ -1,24 +1,7 @@
 {
-  function removeEmpty(l) {
-    var x, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = l.length; _i < _len; _i++) {
-      x = l[_i];
-      if (x) {
-        _results.push(x);
-      }
-    }
-    return _results;
-  }
-
-  function getNodeName (node) {
-    return node.scope ? `${node.scope}:${node.name}` : node.name;
-  }
-
   function getComment (content) {
     return {
       type: 'comment',
-      node: {},
       attrs: {},
       children: [content]
     };
@@ -27,7 +10,6 @@
   function getCData (content) {
     return {
       type: 'cdata',
-      node: {},
       attrs: {},
       children: [content]
     };
@@ -39,8 +21,7 @@
 
   function getNode (node, attrs) {
     return {
-      node,
-      type: 'node',
+      type: node,
       attrs: attrs.reduce((prev, curr) => {
         prev[curr[0]] = curr[1];
         return prev;
@@ -60,14 +41,6 @@ Start
     return el;
   }
   / Element
-
-/*
-Start
-	= content:(Prolog comments:( _ c:Comment { return c } / _ PI { return null } )* e:( _ e:Element { return e } )? { return (e ? removeEmpty(comments).concat([e]) : removeEmpty(comments)) })? comments:Comment* _
-		{
-			return (content ? content.concat(comments) : comments);
-		}
-*/
 
 WS
   = [\t\v\f \u00A0\uFEFF]
@@ -112,16 +85,15 @@ Identifier
 
 Identity "qualified identifier"
 	= scope:Identifier ':' name:Identifier {
-      return { name, scope };
+      return `${scope}:${name}`
     }
 	/ name:Identifier {
-      return { name, scope: '' };
+      return name;
     }
-
 
 Attribute
   = _ identity:Identity value:( _ '=' _ value:STRING { return value; } )? {
-      return [identity.name, value];
+      return [identity, value];
     }
 
 TagOpen
@@ -140,9 +112,8 @@ TagSelf
 Element
   = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
       // Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu!!!!
-      const { scope, name } = tag.node;
-
-      if (scope === 'fest') {
+      if (tag.type.startsWith('fest:')) {
+        const [scope, name] = tag.type.split(':');
         switch (name) {
           case 'params':
             tag.children = [parseParams(contents)]
@@ -151,7 +122,7 @@ Element
           case 'get':
             // tag.params += parseParams(contents);
             tag.children = tag.children.concat(
-              contents.filter(child => child.type !== 'text')
+              contents.filter(c => typeof c !== 'text')
             );
             break;
 
