@@ -21,6 +21,17 @@
         </div>
       </fieldset>
 
+      <div data-label="for test">
+        <fest:for iterate="json.items" index="itemIndex" value="item">
+          <h3>
+            <fest:value>item.text</fest:value>
+          </h3>
+          <p>
+            <fest:value>itemIndex</fest:value>: <fest:value>item.text</fest:value>
+          </p>
+        </fest:for>
+      </div>
+
       <fest:if test="json.done">
         <h1>done</h1>
       </fest:if>

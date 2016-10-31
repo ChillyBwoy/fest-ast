@@ -1,0 +1,37 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+
+  <div>
+    <h3>What i really should do</h3>
+    <ul>
+      <fest:each iterate="json.really" index="key" value="value">
+        <li>
+          <fest:value>key</fest:value> = <fest:value>value</fest:value>
+        </li>
+      </fest:each>
+    </ul>
+  </div>
+
+  <form action="" data-component-el="form">
+    <h3>
+      <fest:value>json.newTodo</fest:value>
+    </h3>
+    <div>
+      <input type="text" value="{json.newTodo}" placeholder="Add new todo" data-component-el="newTodo" />
+      <button type="submit">+</button>
+    </div>
+  </form>
+
+
+  <fest:if test="json.todos && json.todos.length > 0">
+    <ul class="m-todo__list">
+      <fest:for iterate="json.todos" index="i" value="todo">
+        <li class="m-todo__item">
+          <label>
+            <input type="checkbox" />
+            <span><fest:value>todo.text</fest:value></span>
+          </label>
+        </li>
+      </fest:for>
+    </ul>
+  </fest:if>
+</fest:template>

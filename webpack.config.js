@@ -5,6 +5,8 @@ const config = {
   devtool: 'source-map',
   entry: {
     app: './src/app.js',
+    cito: './src/cito.js',
+    vdom: './src/vdom.js',
   },
   output: {
     filename: '[name].js',

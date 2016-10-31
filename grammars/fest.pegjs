@@ -101,7 +101,7 @@ Identity "qualified identifier"
 
 Attribute
   = _ identity:Identity value:( _ '=' _ value:STRING { return value; } )? {
-      return [getNodeName(identity), value];
+      return [identity.name, value];
     }
 
 TagOpen
@@ -139,6 +139,13 @@ Element
             tag.children = tag.children.concat(
               contents.filter(child => child.type !== 'text')
             );
+            break;
+
+          case 'script':
+            if (tag.params === null) {
+              tag.params = '';
+            }
+            tag.params += parseParams(contents);
             break;
 
           default:
