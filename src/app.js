@@ -1,16 +1,20 @@
 import tplSimpleForm from './templates/simple-form';
-import tplTodos from './templates/todos';
-import tplTodosFest from './templates/todos.fest';
 
-function d (type, node, attrs, params, children) {
-  return {
-    name: `${node.scope}:${node.name}`,
+import tplTodosF from './templates/todos';
+import tplToolkitF from './templates/toolkit';
+
+import tplToolkitFest from './templates/toolkit.fest';
+
+function d (type, node, attrs, children) {
+  const n = {
+    name: node.scope ? `${node.scope}:${node.name}` : node.name,
     type,
     node,
     attrs,
-    params,
     children: Array.prototype.concat.apply([], children)
   };
+  console.log(n);
+  return n;
 }
 
 function setAttr ($el, name, value) {
@@ -90,10 +94,10 @@ function createElement (node) {
   } else if (node && node.type === 'node') {
     const { scope } = node.node;
 
-    if (scope === 'xml') {
-      return createElementDOM(node);
-    } else if (scope === 'fest') {
+    if (scope === 'fest') {
       return createElementFest(node);
+    } else {
+      return createElementDOM(node);
     }
   } else {
     return document.createTextNode(node.toString());
@@ -159,8 +163,6 @@ function updateElement ($root, newNode, oldNode, index = 0) {
   // }
 }
 
-const tpl = tplTodos(d);
-
 document.addEventListener('DOMContentLoaded', () => {
   const $root = document.getElementById('root');
   let state1 = {
@@ -187,18 +189,12 @@ document.addEventListener('DOMContentLoaded', () => {
       { text: 'second' }
     ]
   };
+  const tplToolkit = tplToolkitF(d);
+  const tplTodos = tplTodosF(d);
 
-  const a1 = tpl(state1);
-  const a2 = tpl(state2);
+  const a1 = tplTodos(state1);
+  console.log(createElement(a1));
+  console.log(tplToolkitFest(a1));
 
-  console.log(a1);
-  console.log(tplTodosFest(state1));
-  // console.log(a2, createElement(a2));
   $root.appendChild(createElement(a1));
-  updateElement($root, a1, a2);
-
-  // updateElement($root, a1);
-  // setTimeout(() => {
-  //   updateElement($root, a1, a2);
-  // }, 1000);
 });

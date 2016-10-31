@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
 
   <fest:set name="element">
@@ -110,10 +111,10 @@
   <fest:get name="bigsearch">
     <fest:params>
       {
-        "form": {
-          "attrs": {
-            "method": "GET",
-            "action": "/search/"
+        form: {
+          attrs: {
+            method: 'GET',
+            action: '/search/'
           }
         },
         "input": {

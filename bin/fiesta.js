@@ -26,6 +26,6 @@ if (template) {
   if (fIndex !== -1) {
     process.stdout.write(astWrap(ast, args[fIndex + 1]));
   } else {
-    process.stdout.write(`module.exports = ${JSON.stringify(ast, '\n', 2)}`);
+    process.stdout.write(`module.exports = ${JSON.stringify(ast)}`);
   }
 }

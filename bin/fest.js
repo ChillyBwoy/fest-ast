@@ -11,14 +11,6 @@ function compile (tplPath) {
   return str;
 }
 
-function wrap (ast, f) {
-  return `module.exports = function (${f}) {
-  return function (json = {}, params = {}) {
-    return ${astAsFuncs(ast, f)};
-  };
-};`;
-}
-
 const [template, ...args] = process.argv.slice(2);
 
 if (template) {

@@ -1,4 +1,16 @@
 {
+  function removeEmpty(l) {
+    var x, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = l.length; _i < _len; _i++) {
+      x = l[_i];
+      if (x) {
+        _results.push(x);
+      }
+    }
+    return _results;
+  }
+
   function getNodeName (node) {
     return node.scope ? `${node.scope}:${node.name}` : node.name;
   }
@@ -7,7 +19,6 @@
     return {
       type: 'comment',
       node: {},
-      params: null,
       attrs: {},
       children: [content]
     };
@@ -17,7 +28,6 @@
     return {
       type: 'cdata',
       node: {},
-      params: null,
       attrs: {},
       children: [content]
     };
@@ -31,7 +41,6 @@
     return {
       node,
       type: 'node',
-      params: null,
       attrs: attrs.reduce((prev, curr) => {
         prev[curr[0]] = curr[1];
         return prev;
@@ -46,8 +55,19 @@
   }
 }
 
-Start =
-  Element
+Start
+  = Prolog _ el:Element {
+    return el;
+  }
+  / Element
+
+/*
+Start
+	= content:(Prolog comments:( _ c:Comment { return c } / _ PI { return null } )* e:( _ e:Element { return e } )? { return (e ? removeEmpty(comments).concat([e]) : removeEmpty(comments)) })? comments:Comment* _
+		{
+			return (content ? content.concat(comments) : comments);
+		}
+*/
 
 WS
   = [\t\v\f \u00A0\uFEFF]
@@ -95,7 +115,7 @@ Identity "qualified identifier"
       return { name, scope };
     }
 	/ name:Identifier {
-      return { name, scope: 'xml' };
+      return { name, scope: '' };
     }
 
 
@@ -125,27 +145,18 @@ Element
       if (scope === 'fest') {
         switch (name) {
           case 'params':
-            if (tag.params === null) {
-              tag.params = '';
-            }
-            tag.params += parseParams(contents);
+            tag.children = [parseParams(contents)]
             break;
 
           case 'get':
-            if (tag.params === null) {
-              tag.params = '';
-            }
-            tag.params += parseParams(contents);
+            // tag.params += parseParams(contents);
             tag.children = tag.children.concat(
               contents.filter(child => child.type !== 'text')
             );
             break;
 
           case 'script':
-            if (tag.params === null) {
-              tag.params = '';
-            }
-            tag.params += parseParams(contents);
+            tag.children = [parseParams(contents)]
             break;
 
           default:
@@ -187,13 +198,37 @@ CDataContent
 
 Comment "comment"
   = '<!--' content:CommentContent {
-    return getComment(content);
-  }
+      return getComment(content);
+    }
 
 CommentContent
   = '-->' {
       return '';
     }
   / head:. tail:CommentContent {
-    return head + tail;
-  }
+      return head + tail;
+    }
+
+PI
+  = '<?' Identifier __ PIContent
+
+PIContent
+  = '?>'
+  / __ PIContent
+  / . PIContent
+
+Prolog
+  = '<?xml'i
+    _ XmlVersion _
+    ( Encoding _ )?
+    ( Standalone _ )?
+    '?>'
+
+XmlVersion
+  = 'version'i _ '=' _ STRING
+
+Encoding
+  = 'encoding'i _ '=' _ STRING
+
+Standalone
+  = 'standalone'i _ '=' _ STRING
