@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
   <div data-id="todos">
-    <h1>Todos</h1>
+    <h1><fest:value>json.label</fest:value></h1>
 
-    <h3>
-      <fest:value>json.label</fest:value>
-    </h3>
+    <p>
+      Create new todo: <fest:value>json.newTodo</fest:value>
+    </p>
 
     <form action="/add" data-component-el="form" data-value="current is: {json.label}">
       <div>
-        <input type="text" value="{json.label}" placeholder="Add new todo" />
+        <input type="text" value="{json.newTodo}" placeholder="Add new todo" data-component-el="newTodo" />
         <button type="submit">+</button>
       </div>
     </form>
@@ -18,12 +18,10 @@
       <ul class="m-todo__list">
         <fest:for iterate="json.todos" index="i" value="todo">
           <li class="m-todo__item">
-            <form action="/edit/{todo.id}">
-              <label>
-                <input type="checkbox" />
-                <span><fest:value>todo.text</fest:value></span>
-              </label>
-            </form>
+            <input type="checkbox" />
+            <span><fest:value>todo.id</fest:value></span>
+            <span><fest:value>todo.text</fest:value></span>
+            <button data-component-el="delete" data-id="{todo.id}">X</button>
           </li>
         </fest:for>
       </ul>
