@@ -5,7 +5,7 @@ import tplTodos from './templates/todos';
 document.addEventListener('DOMContentLoaded', () => {
   const $root = document.getElementById('root');
   let state = {
-    newTodo: 'initial state',
+    label: 'Initial state',
     todos: [
       { text: 'first' },
       { text: 'second' }
@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     vdom({
       ...state,
+      label: 'State updated',
       todos: [{text: 'brand new todo'}, ...state.todos]
     });
-  }, 3000);
+  }, 5000);
 });
