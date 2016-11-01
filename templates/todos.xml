@@ -18,9 +18,13 @@
       <ul class="m-todo__list">
         <fest:for iterate="json.todos" index="i" value="todo">
           <li class="m-todo__item">
-            <input type="checkbox" />
-            <span><fest:value>todo.id</fest:value></span>
-            <span><fest:value>todo.text</fest:value></span>
+            <input type="checkbox" value="{todo.id}"/>
+            <em>
+              <fest:value>todo.id</fest:value>
+            </em>:
+            <span>
+              <fest:value>todo.text</fest:value>
+            </span>
             <button data-component-el="delete" data-id="{todo.id}">X</button>
           </li>
         </fest:for>

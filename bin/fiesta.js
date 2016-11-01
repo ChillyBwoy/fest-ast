@@ -1,12 +1,9 @@
 #!/usr/bin/env node
+
 const fs = require('fs');
 const parser = require('../lib/parser');
+const Tracer = require('pegjs-backtrace');
 const { astAsFuncs } = require('../lib/fiesta');
-
-function compile (tplPath) {
-  const tpl = fs.readFileSync(tplPath, 'utf8');
-  return parser.parse(tpl);
-}
 
 function astWrap (ast) {
   const S = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -24,15 +21,27 @@ function astWrap (ast) {
 };`;
 }
 
+function compile (tplPath, opts = {}) {
+  const tpl = fs.readFileSync(tplPath, 'utf8');
+  const tracer = new Tracer(tpl, {
+  });
+
+  try {
+    const ast = parser.parse(tpl, {tracer});
+    if (opts.wrapInFunc) {
+      process.stdout.write(astWrap(ast));
+    } else {
+      process.stdout.write(`module.exports = ${JSON.stringify(ast)}`);
+    }
+  } catch (e) {
+    process.stderr.write(tracer.getBacktraceString());
+  }
+}
+
 const [template, ...args] = process.argv.slice(2);
 
 if (template) {
-  const ast = compile(template);
-  const wrapInFunc = args.indexOf('-f') !== -1;
-
-  if (wrapInFunc) {
-    process.stdout.write(astWrap(ast));
-  } else {
-    process.stdout.write(`module.exports = ${JSON.stringify(ast)}`);
-  }
+  compile(template, {
+    wrapInFunc: args.indexOf('-f') !== -1
+  });
 }

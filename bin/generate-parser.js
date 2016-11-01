@@ -9,7 +9,7 @@ const parser = peg.generate(grammar, {
   cache: true,
   format: 'commonjs',
   optimize: 'speed',
-  trace: false
+  trace: true
 });
 
 process.stdout.write(`${parser}\n`);

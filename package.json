@@ -17,6 +17,7 @@
     "cito": "git+ssh://git@github.com/joelrich/citojs.git",
     "fest": "git+ssh://git@gitlab.corp.mail.ru:mail/fest.git#vdom",
     "pegjs": "^0.10.0",
+    "pegjs-backtrace": "^0.1.1",
     "redux": "^3.6.0"
   }
 }

@@ -1,45 +1,38 @@
 import { vdom } from 'cito';
-import tplTodosFest from './templates/todos.fest';
+import tplTodos from './templates/todos';
 
-function render (type, node, attrs, params, children) {
-  if (node.scope === 'fest') {
-    return {
-      children: Array.prototype.concat.apply([], children),
-      attrs
-    };
-  } else if (node.scope === 'xml') {
-    return {
-      tag: node.name,
-      attrs,
-      children: Array.prototype.concat.apply([], children)
-    };
-  }
+function render (type, attrs, children) {
+  return {
+    tag: type,
+    children: Array.prototype.concat.apply([], children),
+    attrs
+  };
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const $root1 = document.getElementById('root1');
-  const $root2 = document.getElementById('root2');
+  const $root = document.getElementById('root');
 
   let state = {
-    newTodo: 'initial state',
-    really: {
-      first: 'make a coffee',
-      second: 'code'
-    },
-    todos: [
-      { text: 'first' },
-      { text: 'second' }
-    ]
+    label: 'Initial state',
+    newTodo: '',
+    todos: []
   };
 
-  const root2 = vdom.append($root2, tplTodosFest(state));
-
-
-  setInterval(() => {
-    state = {
-      ...state,
-      todos: [{text: Math.random().toString()}, ...state.todos]
+  const tpl = (data) => {
+    let x = tplTodos(render);
+    console.log(x(data));
+    return {
+      children: x(data)
     };
-    vdom.update(root2, tplTodosFest(state));
-  }, 3000);
+  };
+
+  const v = vdom.append($root, tpl(state));
+  let idcount = 0;
+  // setInterval(() => {
+  //   state = {
+  //     ...state,
+  //     todos: [{text: Math.random().toString(), id: ++idcount}, ...state.todos]
+  //   };
+  //   vdom.update(v, tplTodos(state));
+  // }, 1000);
 });
