@@ -1,7 +1,5 @@
 import { vdom } from 'cito';
-import tplTodosF from './templates/todos';
 import tplTodosFest from './templates/todos.fest';
-import tplToolkitFest from './templates/toolkit.fest';
 
 function render (type, node, attrs, params, children) {
   if (node.scope === 'fest') {
@@ -33,17 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
       { text: 'second' }
     ]
   };
-  const tplTodos = tplTodosF(render);
-  const root1 = vdom.append($root1, tplTodos(state));
+
   const root2 = vdom.append($root2, tplTodosFest(state));
 
 
-  // setInterval(() => {
-  //   state = {
-  //     ...state,
-  //     todos: [{text: Math.random().toString()}, ...state.todos]
-  //   };
-  //   vdom.update(root1, tpl(state));
-  //   vdom.update(root2, tplTodosFest(state));
-  // }, 3000);
+  setInterval(() => {
+    state = {
+      ...state,
+      todos: [{text: Math.random().toString()}, ...state.todos]
+    };
+    vdom.update(root2, tplTodosFest(state));
+  }, 3000);
 });

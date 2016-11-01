@@ -12,8 +12,15 @@ function astWrap (ast) {
   const S = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
   const FUNC_NAME = `ast$${S}`;
 
+  if (ast.type !== 'fest:template') {
+    throw new Error('invalid template');
+  }
+  const { attrs: { context_name } } = ast;
+
   return `module.exports = function (${FUNC_NAME}) {
-  return ${astAsFuncs(ast, FUNC_NAME)};
+  return function (${context_name ? context_name : ''}) {
+    return ${astAsFuncs(ast, FUNC_NAME)};
+  };
 };`;
 }
 

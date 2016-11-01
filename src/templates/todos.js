@@ -1,29 +1,39 @@
-module.exports = function(ast$19e9) {
-  return ast$19e9('fest:template', {
-    "xmlns:fest": "http://fest.mail.ru",
-    "context_name": "json"
-  }, [ast$19e9('h1', {}, ['Todos']), ast$19e9('form', {
-    "action": "/add",
-    "data-component-el": "form"
-  }, [ast$19e9('div', {}, [ast$19e9('input', {
-    "type": "text",
-    "value": "{json.newTodo}",
-    "placeholder": "Add new todo"
-  }, []), ast$19e9('button', {
-    "type": "submit"
-  }, ['+'])])]), ast$19e9('fest:if', {
-    "test": "json.todos && json.todos.length > 0"
-  }, [ast$19e9('ul', {
-    "class": "m-todo__list"
-  }, [ast$19e9('fest:for', {
-    "iterate": "json.todos",
-    "index": "i",
-    "value": "todo"
-  }, [ast$19e9('li', {
-    "class": "m-todo__item"
-  }, [ast$19e9('form', {
-    "action": "/edit/{todo.id}"
-  }, [ast$19e9('label', {}, [ast$19e9('input', {
-    "type": "checkbox"
-  }, []), ast$19e9('span', {}, [ast$19e9('fest:value', {}, ['todo.text'])])])])])])])])]);
+module.exports = function(ast$153b) {
+  return function(json) {
+    return [ast$153b('div', {
+      "data-id": "todos"
+    }, [ast$153b('h1', {}, ['Todos']), ast$153b('form', {
+      "action": "/add",
+      "data-component-el": "form",
+      "data-value": "current is: ${json.newTodo}"
+    }, [ast$153b('div', {}, [ast$153b('input', {
+      "type": "text",
+      "value": "${json.newTodo}",
+      "placeholder": "Add new todo"
+    }, []), ast$153b('button', {
+      "type": "submit"
+    }, ['+'])])]), (function() {
+      if (json.todos && json.todos.length > 0) {
+        return [ast$153b('ul', {
+          "class": "m-todo__list"
+        }, [(function() {
+          var ast$153b$var1 = [],
+            i, todo;
+          for (i = 0; i < json.todos.length; i++) {
+            todo = json.todos[i];
+            ast$153b$var1 = ast$153b$var1.concat([ast$153b('li', {
+              "class": "m-todo__item"
+            }, [ast$153b('form', {
+              "action": "/edit/${todo.id}"
+            }, [ast$153b('label', {}, [ast$153b('input', {
+              "type": "checkbox"
+            }, []), ast$153b('span', {}, [(todo.text).toString()])])])])]);
+          }
+          return ast$153b$var1;
+        }())]), ast$153b('p', {}, ['Total todos:', (json.todos.length).toString()])];
+      } else {
+        return null;
+      }
+    }())])];
+  };
 };

@@ -12,9 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  const node = createVDOM(tplTodos);
+  const vdom = createVDOM($root, tplTodos);
+  vdom(state);
 
-  console.log(node);
-
-  // $root.appendChild(node);
+  setTimeout(() => {
+    vdom({
+      ...state,
+      todos: [{text: 'brand new todo'}, ...state.todos]
+    });
+  }, 3000);
 });

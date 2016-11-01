@@ -38,8 +38,8 @@
 
 Start
   = Prolog _ el:Element {
-    return el;
-  }
+      return el;
+    }
   / Element
 
 WS
@@ -63,12 +63,20 @@ __ "white space character"
 _ "white space character"
   = WSEOL*
 
-CHARS = ([^<\n\r]+)
+Chars = ([^<\n\r]+)
 
-STRING "string"
-  = '"' string:[^"\n\r]* '"' { return string.join(""); }
-  / "'" string:[^'\n\r]* "'" { return string.join(""); }
+String "string"
+  = '"' string:[^"\n\r]* '"' {
+  	  return string.join("");
+    }
+  / "'" string:[^'\n\r]* "'" {
+      return string.join("");
+    }
 
+StringWithExpr
+  = '"' head:[^"\n\r\{]* '{' expr:[^"\n\r\{\}]+ '}' tail:[^"\n\r\}]* '"' {
+      return `${head.join('')}\${${expr.join('')}}${tail.join('')}`;
+    }
 
 NameStartChar
   = [A-Z] / "_" / [a-z] / [\u00C0-\u00D6] / [\u00D8-\u00F6]
@@ -91,23 +99,31 @@ Identity "qualified identifier"
       return name;
     }
 
+AttributeContent
+  = _ '=' _ value:StringWithExpr {
+      return value;
+    }
+  / _ '=' _ value:String {
+  	  return value;
+  	}
+
 Attribute
-  = _ identity:Identity value:( _ '=' _ value:STRING { return value; } )? {
+  = _ identity:Identity value:AttributeContent? {
       return [identity, value];
     }
 
 TagOpen
   = '<' identity:Identity attrs:Attribute* _ '>' {
-    return getNode(identity, attrs);
-  }
+      return getNode(identity, attrs);
+    }
 
 TagClose
   = '</' Identity '>'
 
 TagSelf
   = '<' identity:Identity attrs:Attribute* _ '/>' {
-    return getNode(identity, attrs);
-  }
+      return getNode(identity, attrs);
+    }
 
 Element
   = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
@@ -152,7 +168,7 @@ ElementContent
   / ElementValue
 
 ElementValue
-  = _ chars:CHARS _ {
+  = _ chars:Chars _ {
       return getText(chars);
     }
 
@@ -196,10 +212,10 @@ Prolog
     '?>'
 
 XmlVersion
-  = 'version'i _ '=' _ STRING
+  = 'version'i _ '=' _ String
 
 Encoding
-  = 'encoding'i _ '=' _ STRING
+  = 'encoding'i _ '=' _ String
 
 Standalone
-  = 'standalone'i _ '=' _ STRING
+  = 'standalone'i _ '=' _ String
