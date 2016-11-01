@@ -67,14 +67,17 @@ Chars = ([^<\n\r]+)
 
 String "string"
   = '"' string:[^"\n\r]* '"' {
-  	  return string.join("");
+  	  return string.join('');
     }
   / "'" string:[^'\n\r]* "'" {
-      return string.join("");
+      return string.join('');
     }
 
 StringWithExpr
   = '"' head:[^"\n\r\{]* '{' expr:[^"\n\r\{\}]+ '}' tail:[^"\n\r\}]* '"' {
+      return `${head.join('')}\${${expr.join('')}}${tail.join('')}`;
+    }
+  / "'" head:[^'\n\r\{]* '{' expr:[^'\n\r\{\}]+ '}' tail:[^'\n\r\}]* "'" {
       return `${head.join('')}\${${expr.join('')}}${tail.join('')}`;
     }
 
@@ -88,7 +91,7 @@ NameChar
 
 Identifier
   = first:NameStartChar last:NameChar* {
-      return first + last.join("");
+      return first + last.join('');
     }
 
 Identity "qualified identifier"
@@ -98,7 +101,7 @@ Identity "qualified identifier"
 	/ name:Identifier {
       return name;
     }
-
+/*
 AttributeContent
   = _ '=' _ value:StringWithExpr {
       return value;
@@ -106,6 +109,11 @@ AttributeContent
   / _ '=' _ value:String {
   	  return value;
   	}
+*/
+AttributeContent
+  = _ '=' _ value:String {
+      return value;
+    }
 
 Attribute
   = _ identity:Identity value:AttributeContent? {
