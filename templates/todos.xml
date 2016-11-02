@@ -18,7 +18,7 @@
       <ul class="m-todo__list">
         <fest:for iterate="json.todos" index="i" value="todo">
           <li class="m-todo__item">
-            <input type="checkbox" value="{todo.id}"/>
+            <input type="checkbox"/>
             <em>
               <fest:value>todo.id</fest:value>
             </em>:

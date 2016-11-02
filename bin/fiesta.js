@@ -2,11 +2,12 @@
 
 const fs = require('fs');
 const parser = require('../lib/parser');
+const crypto = require('crypto');
 const Tracer = require('pegjs-backtrace');
 const { astAsFuncs } = require('../lib/fiesta');
 
 function astWrap (ast) {
-  const S = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  const S = crypto.randomBytes(4).toString('hex');
   const FUNC_NAME = `ast$${S}`;
 
   if (ast.type !== 'fest:template') {

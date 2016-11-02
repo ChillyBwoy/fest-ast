@@ -1,42 +1,42 @@
-module.exports = function(ast$131f) {
+module.exports = function(ast$25c8e403) {
   return function(json) {
-    return [ast$131f('div', {
+    return [ast$25c8e403('div', {
       "data-id": "todos"
-    }, [ast$131f('h1', {}, [(json.label)]), ast$131f('p', {}, ['Create new todo:', (json.newTodo)]), ast$131f('form', {
+    }, [ast$25c8e403('h1', {}, [("" + (json.label))]), ast$25c8e403('p', {}, ['Create new todo:', ("" + (json.newTodo))]), ast$25c8e403('form', {
       "action": "/add",
       "data-component-el": "form",
-      "data-value": "current is: " + (json.label)
-    }, [ast$131f('div', {}, [ast$131f('input', {
+      "data-value": "current is: " + ("" + (json.label))
+    }, [ast$25c8e403('div', {}, [ast$25c8e403('input', {
       "type": "text",
-      "value": (json.newTodo),
+      "value": ("" + (json.newTodo)),
       "placeholder": "Add new todo",
       "data-component-el": "newTodo"
-    }, []), ast$131f('button', {
+    }, []), ast$25c8e403('button', {
       "type": "submit"
     }, ['+'])])]), (function() {
-      var ast$131f$var1 = [];
+      var ast$25c8e403$__1 = [];
       if (json.todos && json.todos.length > 0) {
-        ast$131f$var1.push(ast$131f('ul', {
+        ast$25c8e403$__1.push(ast$25c8e403('ul', {
           "class": "m-todo__list"
         }, [(function() {
-          var ast$131f$var2 = [],
+          var ast$25c8e403$__2 = [],
+            ast$25c8e403$__3 = json.todos.length,
             i, todo;
-          for (i = 0; i < json.todos.length; i++) {
+          for (i = 0; i < ast$25c8e403$__3; i++) {
             todo = json.todos[i];
-            ast$131f$var2.push([ast$131f('li', {
+            ast$25c8e403$__2.push([ast$25c8e403('li', {
               "class": "m-todo__item"
-            }, [ast$131f('input', {
-              "type": "checkbox",
-              "value": (todo.id)
-            }, []), ast$131f('em', {}, [(todo.id)]), ':', ast$131f('span', {}, [(todo.text)]), ast$131f('button', {
+            }, [ast$25c8e403('input', {
+              "type": "checkbox"
+            }, []), ast$25c8e403('em', {}, [("" + (todo.id))]), ':', ast$25c8e403('span', {}, [("" + (todo.text))]), ast$25c8e403('button', {
               "data-component-el": "delete",
-              "data-id": (todo.id)
+              "data-id": ("" + (todo.id))
             }, ['X'])])]);
           }
-          return ast$131f$var2;
-        }())]), ast$131f('p', {}, ['Total todos:', (json.todos.length)]));
+          return ast$25c8e403$__2;
+        }())]), ast$25c8e403('p', {}, ['Total todos:', ("" + (json.todos.length))]));
       };
-      return ast$131f$var1;
+      return ast$25c8e403$__1;
     }())])];
   };
 };
