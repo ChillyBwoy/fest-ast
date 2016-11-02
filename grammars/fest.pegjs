@@ -15,7 +15,7 @@
 
   function getComment (content) {
     return {
-      type: 'comment',
+      type: '#comment',
       attrs: {},
       children: [content]
     };
@@ -23,7 +23,7 @@
 
   function getCData (content) {
     return {
-      type: 'cdata',
+      type: '#cdata',
       attrs: {},
       children: [content]
     };
@@ -114,15 +114,7 @@ Identity "qualified identifier"
 	/ name:Identifier {
       return name;
     }
-/*
-AttributeContent
-  = _ '=' _ value:StringWithExpr {
-      return value;
-    }
-  / _ '=' _ value:String {
-  	  return value;
-  	}
-*/
+
 AttributeContent
   = _ '=' _ value:String {
       return value;
