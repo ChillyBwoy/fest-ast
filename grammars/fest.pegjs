@@ -1,4 +1,18 @@
 {
+  function mergeTextNodes (nodes, merged = []) {
+    if (nodes.length === 0) {
+      return merged;
+    }
+    const [head, ...tail] = nodes;
+    const last = merged.slice(-1)[0];
+
+    const nextNodes = (typeof last === 'string' && typeof head === 'string') ?
+      merged.slice(0, -1).concat([last, head].join('\\n')) :
+      merged.concat(head);
+
+    return mergeTextNodes(tail, nextNodes);
+  }
+
   function getComment (content) {
     return {
       type: 'comment',
@@ -31,8 +45,7 @@
   }
 
   function parseParams (source) {
-    let params = source.filter(item => typeof item === 'string').join('');
-    return params;
+    return source.filter(item => typeof item === 'string').join('');
   }
 }
 
@@ -158,12 +171,11 @@ Element
             tag.children = tag.children.concat(contents);
             break;
         }
-        return tag;
       } else {
         tag.children = tag.children.concat(contents);
-        return tag;
       }
-
+      tag.children = mergeTextNodes(tag.children);
+      return tag;
     }
   / _ tag:TagSelf {
       return tag;
