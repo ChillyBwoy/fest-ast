@@ -1,8 +1,8 @@
 {
-  const NODES_TO_MERGE = ['#text', '#cdata', '#comment'];
+  const SCALARS = ['#text', '#cdata', '#comment'];
 
   function isScalar (n) {
-    return NODES_TO_MERGE.indexOf(n.type) !== -1;
+    return SCALARS.indexOf(n.type) !== -1;
   }
 
   function flat (xs) {
@@ -26,7 +26,7 @@
     if ((typeof head !== 'undefined' && typeof last !== 'undefined') &&
         (last.type === head.type) &&
         isScalar(head)) {
-      let nextChildren = [].concat(last.children).concat(head.children).join('\\n');
+      let nextChildren = [].concat(last.children).concat(head.children).join('');
       let nextNode = createNode(last.type, {}, [nextChildren]);
       nextNodes = merged.slice(0, -1).concat(nextNode);
     } else {
@@ -45,7 +45,7 @@
   }
 
   function getText (content) {
-    return createNode('#text', {}, [content.split('\n').join('')]);
+    return createNode('#text', {}, [content.split('\n').join('\\n')]);
   }
 
   function getNode (node, attrs) {
@@ -152,7 +152,7 @@ TagSelf
 
 Element
   = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
-      // Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu!!!!
+      // Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu
       tag.children = flat(tag.children.concat(contents));
       tag.children = mergeNodes(tag.children);
       return tag;
@@ -174,12 +174,12 @@ ElementValue
     }
 
 CData "CDATA"
-  = '<![CDATA[' content:CDataContent {
+  = '<![CDATA[' _ content:CDataContent {
       return getCData(content);
     }
 
 CDataContent
-  = ']]>'
+  = _ ']]>'
   / head:. tail:CDataContent {
       return head + tail;
     }
