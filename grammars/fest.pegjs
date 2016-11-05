@@ -1,47 +1,59 @@
 {
-  function mergeTextNodes (nodes, merged = []) {
+  const NODES_TO_MERGE = ['#text', '#cdata', '#comment'];
+
+  function isScalar (n) {
+    return NODES_TO_MERGE.indexOf(n.type) !== -1;
+  }
+
+  function flat (xs) {
+    return Array.prototype.concat.apply([], xs);
+  }
+
+  function createNode (type, attrs = {}, children = []) {
+    return {
+      type, attrs, children
+    };
+  }
+
+  function mergeNodes (nodes, merged = []) {
     if (nodes.length === 0) {
       return merged;
     }
     const [head, ...tail] = nodes;
     const last = merged.slice(-1)[0];
 
-    const nextNodes = (typeof last === 'string' && typeof head === 'string') ?
-      merged.slice(0, -1).concat([last, head].join('\\n')) :
-      merged.concat(head);
+    let nextNodes = [];
+    if ((typeof head !== 'undefined' && typeof last !== 'undefined') &&
+        (last.type === head.type) &&
+        isScalar(head)) {
+      let nextChildren = [].concat(last.children).concat(head.children).join('\\n');
+      let nextNode = createNode(last.type, {}, [nextChildren]);
+      nextNodes = merged.slice(0, -1).concat(nextNode);
+    } else {
+      nextNodes = merged.concat(head);
+    }
 
-    return mergeTextNodes(tail, nextNodes);
+    return mergeNodes(tail, nextNodes);
   }
 
   function getComment (content) {
-    return {
-      type: '#comment',
-      attrs: {},
-      children: [content]
-    };
+    return createNode('#comment', {}, [content]);
   }
 
   function getCData (content) {
-    return {
-      type: '#cdata',
-      attrs: {},
-      children: [content]
-    };
+    return createNode('#cdata', {}, [content]);
   }
 
-  function getText (chars) {
-    return chars.join('').trim();
+  function getText (content) {
+    return createNode('#text', {}, [content.split('\n').join('')]);
   }
 
   function getNode (node, attrs) {
-    return {
-      type: node,
-      attrs: attrs.reduce((prev, curr) => {
-        prev[curr[0]] = curr[1];
-        return prev;
-      }, {}),
-      children: []
-    };
+    const a = attrs.reduce((prev, curr) => {
+      prev[curr[0]] = curr[1];
+      return prev;
+    }, {});
+    return createNode(node, a);
   }
 
   function parseParams (source) {
@@ -141,32 +153,8 @@ TagSelf
 Element
   = _ tag:TagOpen _ contents:ElementContent* _ TagClose _ {
       // Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu!!!!
-      if (tag.type.startsWith('fest:')) {
-        const [scope, name] = tag.type.split(':');
-        switch (name) {
-          case 'params':
-            tag.children = [parseParams(contents)]
-            break;
-
-          case 'get':
-            // tag.params += parseParams(contents);
-            tag.children = tag.children.concat(
-              contents.filter(c => typeof c !== 'text')
-            );
-            break;
-
-          case 'script':
-            tag.children = [parseParams(contents)]
-            break;
-
-          default:
-            tag.children = tag.children.concat(contents);
-            break;
-        }
-      } else {
-        tag.children = tag.children.concat(contents);
-      }
-      tag.children = mergeTextNodes(tag.children);
+      tag.children = flat(tag.children.concat(contents));
+      tag.children = mergeNodes(tag.children);
       return tag;
     }
   / _ tag:TagSelf {
@@ -180,8 +168,9 @@ ElementContent
   / ElementValue
 
 ElementValue
-  = _ chars:Chars _ {
-      return getText(chars);
+  = begin:_ content:Chars end:_ {
+      const source = `${begin.join('')}${content.join('')}${end.join('')}`;
+      return getText(source);
     }
 
 CData "CDATA"
