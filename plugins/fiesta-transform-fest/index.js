@@ -1,6 +1,7 @@
-const { festTemplate, festValue, festSet, festGet } = require('./terms/data');
-const { festEach, festFor, festIf } = require('./terms/expr');
-const { validate } = require('./validate');
+const { createCounter, createStorage } = require('./utils');
+const { validate } = require('./validator');
+
+const terms = require('./terms');
 
 function notImplemented(ast) {
   throw new Error(`/* Method "${ast.type}" is not implemented yet */`);
@@ -14,18 +15,24 @@ function term(...args) {
   return (t) => t(...args);
 }
 
-function festTermsFactory(getVar, getNode, getChildren, onVisit) {
-  const t = term(getVar, getNode, getChildren, onVisit);
+function plugin(token, getNode, getChildren) {
+  const getVar = createCounter(token, 'v');
+  const templateStorage = createStorage();
 
+  function onVisit(v) {
+    return v(templateStorage);
+  }
+
+  const t = term(getVar, getNode, getChildren, onVisit);
   const methods = {
     // Данные и вывод
-    'fest:template': t(festTemplate),
-    'fest:value': t(festValue),
+    'fest:template': t(terms.festTemplate),
+    'fest:value': t(terms.festValue),
 
     'fest:text': notImplemented,
     'fest:space': notImplemented,
-    'fest:set': t(festSet),
-    'fest:get': t(festGet),
+    'fest:set': t(terms.festSet),
+    'fest:get': t(terms.festGet),
     'fest:element': notImplemented,
 
     'fest:attributes': notImplemented,
@@ -33,10 +40,10 @@ function festTermsFactory(getVar, getNode, getChildren, onVisit) {
 
     // Управляющие конструкции
 
-    'fest:each': t(festEach),
-    'fest:for': t(festFor),
+    'fest:each': t(terms.festEach),
+    'fest:for': t(terms.festFor),
 
-    'fest:if': t(festIf),
+    'fest:if': t(terms.festIf),
 
     'fest:choose': notImplemented,
     'fest:when': notImplemented,
@@ -53,17 +60,19 @@ function festTermsFactory(getVar, getNode, getChildren, onVisit) {
     'fest:script': deprecated
   };
 
-  return (ast) => {
-    const { type } = ast;
+  return {
+    prolog() {},
+    getNode(ast) {
+      const { type } = ast;
 
-    if (methods[type]) {
-      const v = validate(ast);
-      return methods[type](ast, v);
+      if (methods[type]) {
+        const v = validate(ast);
+        return methods[type](ast, v);
+      }
+
+      return ast;
     }
-    return ast;
   };
 }
 
-module.exports = {
-  festTermsFactory
-};
+module.exports = plugin;

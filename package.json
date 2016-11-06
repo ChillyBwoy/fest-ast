@@ -2,7 +2,7 @@
   "name": "fest-dom",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/fiesta",
   "scripts": {
     "generate": "./bin/generate-parser.js > lib/parser.js"
   },

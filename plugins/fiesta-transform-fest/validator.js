@@ -1,5 +1,3 @@
-const { FiestaParseError } = require('../error');
-
 /**
  * Валидатор для отдельно взятого терма
  * @param  {AST} ast
@@ -9,18 +7,17 @@ const { FiestaParseError } = require('../error');
 function validate(ast) {
   const { children } = ast;
   const childTypes = children.map(c => c.type);
-  // const childTypesExcepts = ['#comment', '#cdata'];
 
   return {
     allExceptChildren(types = []) {
       // можно любые типы
       if (types.length === 0) {
-        return true;
+        return;
       }
       // кроме
-      const matched = types.forEach(t => {
+      types.forEach(t => {
         if (childTypes.indexOf(t) !== -1) {
-          throw new FiestaParseError(`"fest:set" can't handle "${t}" tag`);
+          throw new Error(`"fest:set" can't handle "${t}" tag`);
         }
       });
     },
@@ -28,7 +25,12 @@ function validate(ast) {
     onlyChildren(types = []) {
       // нельзя никакие
       if (types.length === 0) {
-        return false;
+        return;
+      }
+    },
+    onlyOneChildrenOfType(type) {
+      if (childTypes.length !== 1 && childTypes[0] !== type) {
+        throw new Error('"fest:value" should contain single #text element');
       }
     }
   };

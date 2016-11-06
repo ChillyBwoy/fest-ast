@@ -97,7 +97,7 @@ String "string"
   / "'" string:[^'\n\r]* "'" {
       return string.join('');
     }
-
+/*
 StringWithExpr
   = '"' head:[^"\n\r\{]* '{' expr:[^"\n\r\{\}]+ '}' tail:[^"\n\r\}]* '"' {
       return `${head.join('')}\${${expr.join('')}}${tail.join('')}`;
@@ -105,6 +105,7 @@ StringWithExpr
   / "'" head:[^'\n\r\{]* '{' expr:[^'\n\r\{\}]+ '}' tail:[^'\n\r\}]* "'" {
       return `${head.join('')}\${${expr.join('')}}${tail.join('')}`;
     }
+*/
 
 NameStartChar
   = [A-Z] / "_" / [a-z] / [\u00C0-\u00D6] / [\u00D8-\u00F6]
@@ -169,8 +170,7 @@ ElementContent
 
 ElementValue
   = begin:_ content:Chars end:_ {
-      const source = `${begin.join('')}${content.join('')}${end.join('')}`;
-      return getText(source);
+      return getText(`${begin.join('')}${content.join('')}${end.join('')}`);
     }
 
 CData "CDATA"

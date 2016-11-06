@@ -1,16 +1,17 @@
 function festEach(getVar, getNode, getChildren) {
   return (ast) => {
-    const x = getVar();
+    const result = getVar();
     const { attrs: { index, iterate, value }, children } = ast;
+
     return `(function () {
-      var ${x} = [], ${index}, ${value};
+      var ${result} = [], ${index}, ${value};
       for (${index} in ${iterate}) {
         if (${iterate}.hasOwnProperty(${index})) {
           ${value} = ${iterate}[${index}];
-          ${x}.push([${getChildren(children)}]);
+          ${result}.push([${getChildren(children)}]);
         }
       }
-      return ${x};
+      return ${result};
     }())`;
   };
 }
@@ -20,7 +21,6 @@ function festFor(getVar, getNode, getChildren) {
     const { attrs: { index, iterate, value }, children } = ast;
     const result = getVar();
     const size = getVar();
-
     return `(function () {
       var ${result} = [], ${size} = ${iterate}.length, ${index}, ${value};
       for (${index} = 0; ${index} < ${size}; ${index}++) {
@@ -38,13 +38,13 @@ function festIf(getVar, getNode, getChildren) {
     if (!test) {
       throw new Error(`Invalid expression for "fest:if": ${test}`);
     }
-    const x = getVar();
+    const result = getVar();
     return `(function () {
-      var ${x} = [];
+      var ${result} = [];
       if (${test}) {
-        ${x}.push(${getChildren(children)});
+        ${result}.push(${getChildren(children)});
       };
-      return ${x};
+      return ${result};
     }())`;
   };
 }

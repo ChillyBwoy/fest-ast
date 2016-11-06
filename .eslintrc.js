@@ -13,6 +13,9 @@ module.exports = {
     'max-len': 0,
     'no-underscore-dangle': 0,
     'camelcase': 0,
-    'no-unneeded-ternary': 0
+    'no-unneeded-ternary': 0,
+    'one-var-declaration-per-line': 0,
+    'one-var': 0,
+    'prefer-template': 0
   }
 };
