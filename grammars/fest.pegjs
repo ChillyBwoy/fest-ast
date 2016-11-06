@@ -169,8 +169,8 @@ ElementContent
   / ElementValue
 
 ElementValue
-  = begin:_ content:Chars end:_ {
-      return getText(`${begin.join('')}${content.join('')}${end.join('')}`);
+  = _ content:Chars _ {
+      return getText(content.join('').trim());
     }
 
 CData "CDATA"

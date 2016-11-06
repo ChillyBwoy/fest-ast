@@ -61,7 +61,14 @@ function plugin(token, getNode, getChildren) {
   };
 
   return {
-    prolog() {},
+    getProlog() {
+      return `
+        // --- fest prolog ---
+        var ${getVar('templates')} = ${templateStorage.getAll()};
+        // --- end of fest prolog ---
+      `;
+    },
+
     getNode(ast) {
       const { type } = ast;
 
@@ -71,7 +78,8 @@ function plugin(token, getNode, getChildren) {
       }
 
       return ast;
-    }
+    },
+    name: 'fest'
   };
 }
 

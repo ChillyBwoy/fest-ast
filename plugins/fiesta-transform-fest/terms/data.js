@@ -1,4 +1,4 @@
-function festTemplate() {
+function festTemplate(getVar, getNode) {
   return (ast, v) => {
     v.allExceptChildren([
       'fest:params',
@@ -6,9 +6,16 @@ function festTemplate() {
       'fest:attributes',
       'fest:attribute'
     ]);
-    return Object.assign(ast, {
-      type: '#fragment'
-    });
+    const { attrs: { context_name } } = ast;
+    const root = getNode(Object.assign(ast, {
+      type: '#fragment',
+      attrs: {}
+    }));
+
+    return `function (${context_name ? context_name : ''}) {
+        return ${root};
+    };
+    `;
   };
 }
 
@@ -29,21 +36,23 @@ function festSet(getVar, getNode, getChildren, onVisit) {
       'fest:params',
       'fest:param',
     ]);
-    const { attrs: { name }, children } = ast;
+    const { attrs, children } = ast;
     return onVisit(storage => {
-      // storage.addItem(name, `function (params) {return [${getChildren(children)}];}`);
-      return null;
+      const node = {
+        type: '#fragment',
+        attrs: {},
+        children
+      };
+      storage.addItem(attrs.name, `function (params) {return [${getNode(node)}];}`);
     });
   };
 }
 
-function festGet() {
-  return (ast) => {
-    return ast;
-    // v.onlyChildren(['fest:params']);
-    //
-    // const { attrs: { name } } = ast;
-    // return `${getVar('templates')}['${name}']({})`;
+function festGet(getVar) {
+  return (ast, v) => {
+    v.onlyChildren(['fest:params']);
+    const { attrs: { name } } = ast;
+    return `${getVar('templates')}['${name}']({})`;
   };
 }
 
