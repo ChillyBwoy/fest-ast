@@ -24,7 +24,10 @@ function extract(str, patterns = []) {
 function extractObject(obj) {
   const kv = Object.keys(obj).map(name => {
     const value = extract(obj[name]);
-    return `"${name}": ${value.join('+')}`;
+    if (value.length) {
+      return `"${name}": ${value.join('+')}`;
+    }
+    return `"${name}": ""`;
   });
   return `{${kv.join(',')}}`;
 }

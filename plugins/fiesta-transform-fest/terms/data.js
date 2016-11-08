@@ -8,12 +8,12 @@ function festTemplate(getVar, getNode) {
     ]);
     const { attrs: { context_name }, children } = ast;
     const root = getNode({
-      type: '#fragment',
+      type: '#root',
       attrs: {},
       children
     });
     return `function (${context_name ? context_name : ''}) {
-        return ${root};
+      return ${root};
     };
     `;
   };
