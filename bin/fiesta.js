@@ -9,7 +9,7 @@ if (template) {
   const tpl = fs.readFileSync(template, 'utf8');
   const parse = fiesta();
   const ast = parse(tpl);
-  
+
   if (args.indexOf('-ast') !== -1) {
     process.stdout.write(JSON.stringify(ast.ast));
   } else {

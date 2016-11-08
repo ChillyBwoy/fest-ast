@@ -17,20 +17,26 @@ function validate(ast) {
       // кроме
       types.forEach(t => {
         if (childTypes.indexOf(t) !== -1) {
-          throw new Error(`"fest:set" can't handle "${t}" tag`);
+          throw new Error(`can't handle "${t}" tag`);
         }
       });
     },
-    mustChildren(types = []) {},
+    mustChildren() {},
     onlyChildren(types = []) {
       // нельзя никакие
       if (types.length === 0) {
         return;
       }
     },
+    noChildren() {
+      // нельзя никакие
+      if (childTypes.length !== 0) {
+        throw new Error('should not contain children');
+      }
+    },
     onlyOneChildrenOfType(type) {
       if (childTypes.length !== 1 && childTypes[0] !== type) {
-        throw new Error('"fest:value" should contain single #text element');
+        throw new Error(`should contain only one child of type "${type}" element`);
       }
     }
   };

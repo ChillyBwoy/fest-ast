@@ -6,12 +6,12 @@ function festTemplate(getVar, getNode) {
       'fest:attributes',
       'fest:attribute'
     ]);
-    const { attrs: { context_name } } = ast;
-    const root = getNode(Object.assign(ast, {
+    const { attrs: { context_name }, children } = ast;
+    const root = getNode({
       type: '#fragment',
-      attrs: {}
-    }));
-
+      attrs: {},
+      children
+    });
     return `function (${context_name ? context_name : ''}) {
         return ${root};
     };
@@ -56,9 +56,37 @@ function festGet(getVar) {
   };
 }
 
+function festSpace() {
+  return (ast, v) => {
+    v.noChildren();
+    const space = ' ';
+    return `'${space}'`;
+  };
+}
+
+function festText() {
+  return (ast) => {
+    return ast.children[0];
+  };
+}
+
+function festElement() {
+  return (ast) => {
+    const { attrs, children } = ast;
+    return {
+      type: attrs.name,
+      attrs,
+      children
+    };
+  };
+}
+
 module.exports = {
   festTemplate,
   festValue,
   festSet,
-  festGet
+  festGet,
+  festSpace,
+  festText,
+  festElement
 };

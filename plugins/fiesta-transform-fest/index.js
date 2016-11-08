@@ -29,20 +29,19 @@ function plugin(token, getNode, getChildren) {
     'fest:template': t(terms.festTemplate),
     'fest:value': t(terms.festValue),
 
-    'fest:text': notImplemented,
-    'fest:space': notImplemented,
+    'fest:text': t(terms.festText),
+    'fest:space': t(terms.festSpace),
     'fest:set': t(terms.festSet),
     'fest:get': t(terms.festGet),
-    'fest:element': notImplemented,
-
+    'fest:element': t(terms.festElement),
     'fest:attributes': notImplemented,
     'fest:attribute': notImplemented,
+    'fest:params': notImplemented,
+    'fest:param': notImplemented,
 
     // Управляющие конструкции
-
     'fest:each': t(terms.festEach),
     'fest:for': t(terms.festFor),
-
     'fest:if': t(terms.festIf),
 
     'fest:choose': notImplemented,
@@ -51,9 +50,10 @@ function plugin(token, getNode, getChildren) {
 
     // Остальные конструкции
     'fest:cdata': notImplemented,
-    'fest:comment': notImplemented,
+    'fest:comment': t(terms.festComment),
     'fest:doctype': notImplemented,
 
+    // досвидос, сраный рассадник багов
     'fest:var': deprecated,
     'fest:include': deprecated,
     'fest:insert': deprecated,
@@ -62,11 +62,9 @@ function plugin(token, getNode, getChildren) {
 
   return {
     getProlog() {
-      return `
-        // --- fest prolog ---
-        var ${getVar('templates')} = ${templateStorage.getAll()};
-        // --- end of fest prolog ---
-      `;
+      return `// --- fest prolog ---
+  var ${getVar('templates')} = ${templateStorage.getAll()};
+  // --- end of fest prolog ---`;
     },
 
     getNode(ast) {

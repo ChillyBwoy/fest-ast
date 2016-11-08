@@ -8,7 +8,7 @@ function festEach(getVar, getNode, getChildren) {
       for (${index} in ${iterate}) {
         if (${iterate}.hasOwnProperty(${index})) {
           ${value} = ${iterate}[${index}];
-          ${result}.push([${getChildren(children)}]);
+          ${result}.push(${getChildren(children)});
         }
       }
       return ${result};
@@ -25,7 +25,7 @@ function festFor(getVar, getNode, getChildren) {
       var ${result} = [], ${size} = ${iterate}.length, ${index}, ${value};
       for (${index} = 0; ${index} < ${size}; ${index}++) {
         ${value} = ${iterate}[${index}];
-        ${result}.push([${getChildren(children)}]);
+        ${result}.push(${getChildren(children)});
       }
       return ${result};
     }())`;
