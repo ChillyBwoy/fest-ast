@@ -26,7 +26,7 @@ function festValue() {
     const body = children
       .reduce((acc, c) => acc.concat(c.children), [])
       .map(c => ('' + c)).join('');
-    return `('' + ${body})`;
+    return `('' + (${body}))`;
   };
 }
 
