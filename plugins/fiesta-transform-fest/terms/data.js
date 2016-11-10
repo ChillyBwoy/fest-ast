@@ -65,7 +65,8 @@ function festSpace() {
 }
 
 function festText() {
-  return (ast) => {
+  return (ast, v) => {
+    // only text nodes
     return ast.children[0];
   };
 }

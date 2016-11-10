@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+		xmlns:fest="http://fest.mail.ru"
+		targetNamespace="http://fest.mail.ru" elementFormDefault="qualified">
+
+	<element name="instruction" type="anyType" abstract="true"/>
+
+	<element name="template">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+			<attribute name="context_name" use="required" type="string"/>
+		</complexType>
+	</element>
+
+	<element name="include" substitutionGroup="fest:instruction">
+		<complexType>
+			<attribute name="src" type="anyURI" use="required"/>
+			<attribute name="context" type="string"/>
+		</complexType>
+	</element>
+
+	<element name="insert" substitutionGroup="fest:instruction">
+		<complexType>
+			<attribute name="src" type="anyURI" use="required"/>
+		</complexType>
+	</element>
+
+	<element name="set" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="test" type="string"/>
+		</complexType>
+	</element>
+
+	<element name="get" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<attribute name="name" type="string" use="required"/>
+		</complexType>
+	</element>
+
+	<element name="doctype" substitutionGroup="fest:instruction">
+		<complexType mixed="true"/>
+	</element>
+
+	<element name="script" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<attribute name="src" type="anyURI"/>
+		</complexType>
+	</element>
+
+	<element name="text" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<attribute name="value" type="string"/>
+		</complexType>
+	</element>
+
+	<element name="comment" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="cdata" substitutionGroup="fest:instruction">
+		<complexType mixed="true"/>
+	</element>
+
+	<element name="space" substitutionGroup="fest:instruction"/>
+
+	<element name="value" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<attribute name="output" default="text">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="text"/>
+						<enumeration value="js"/>
+					</restriction>
+				</simpleType>
+			</attribute>
+			<attribute name="safe" default="true">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="true"/>
+						<enumeration value="false"/>
+					</restriction>
+				</simpleType>
+			</attribute>
+		</complexType>
+	</element>
+
+	<element name="for" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+			<attributeGroup ref="fest:foreach"/>
+		</complexType>
+	</element>
+
+	<element name="foreach" substitutionGroup="fest:instruction">
+		<complexType>
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+			<attributeGroup ref="fest:foreach"/>
+		</complexType>
+	</element>
+
+	<element name="attributes" substitutionGroup="fest:instruction">
+		<complexType>
+			<choice minOccurs="1">
+				<element ref="fest:attribute"/>
+				<element ref="fest:choose"/>
+				<element ref="fest:if"/>
+			</choice>
+		</complexType>
+	</element>
+
+	<element name="attribute" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<element ref="fest:instruction"/>
+				</choice>
+			</sequence>
+			<attribute name="name" type="string" use="required"/>
+		</complexType>
+	</element>
+
+	<element name="choose" substitutionGroup="fest:instruction">
+		<complexType>
+			<sequence>
+				<element ref="fest:when" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="fest:otherwise" minOccurs="0"/>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="when" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+			<attribute name="test" type="string" use="required"/>
+		</complexType>
+	</element>
+
+	<element name="otherwise" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="if" substitutionGroup="fest:instruction">
+		<complexType mixed="true">
+			<sequence>
+				<choice minOccurs="0" maxOccurs="unbounded">
+					<group ref="fest:all"/>
+				</choice>
+			</sequence>
+			<attribute name="test" type="string" use="required"/>
+		</complexType>
+	</element>
+
+
+	<attributeGroup name="foreach">
+		<attribute name="iterate" type="string" use="required"/>
+		<attribute name="index" type="string" use="required"/>
+		<attribute name="from" type="string" use="optional"/>
+		<attribute name="to" type="string" use="optional"/>
+	</attributeGroup>
+
+	<group name="result-element">
+		<choice>
+			<any namespace="##local" processContents="skip"/>
+			<any namespace="##other" processContents="skip"/>
+		</choice>
+	</group>
+
+	<group name="all">
+		<choice>
+			<element ref="fest:instruction"/>
+			<group ref="fest:result-element"/>
+		</choice>
+	</group>
+
+</schema>
