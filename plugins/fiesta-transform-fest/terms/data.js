@@ -20,13 +20,8 @@ function festTemplate(getVar, getNode) {
 }
 
 function festValue() {
-  return (ast, v) => {
-    v.onlyOneChildrenOfType('#text');
-    const { children } = ast;
-    const body = children
-      .reduce((acc, c) => acc.concat(c.children), [])
-      .map(c => ('' + c)).join('');
-    return `('' + (${body}))`;
+  return ({ children }) => {
+    return `('' + (${children}))`;
   };
 }
 
@@ -65,15 +60,18 @@ function festSpace() {
 }
 
 function festText() {
-  return (ast, v) => {
+  return ({ children }) => {
     // only text nodes
-    return ast.children[0];
+    return {
+      type: '#text',
+      attrs: {},
+      children
+    };
   };
 }
 
 function festElement() {
-  return (ast) => {
-    const { attrs, children } = ast;
+  return ({ attrs, children }) => {
     return {
       type: attrs.name,
       attrs,

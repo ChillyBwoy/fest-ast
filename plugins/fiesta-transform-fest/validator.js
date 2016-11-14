@@ -6,7 +6,7 @@
 
 function validate(ast) {
   const { children } = ast;
-  const childTypes = children.map(c => c.type);
+  const childTypes = Array.isArray(children) ? children.map(c => c.type) : ['#text'];
 
   return {
     allExceptChildren(types = []) {
