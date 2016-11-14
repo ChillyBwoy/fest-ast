@@ -16,6 +16,7 @@ module.exports = {
     'no-unneeded-ternary': 0,
     'one-var-declaration-per-line': 0,
     'one-var': 0,
-    'prefer-template': 0
+    'prefer-template': 0,
+    'arrow-body-style': 0
   }
 };

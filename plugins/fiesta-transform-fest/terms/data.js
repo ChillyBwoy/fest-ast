@@ -30,6 +30,8 @@ function festSet(getVar, getNode, getChildren, onVisit) {
     v.allExceptChildren([
       'fest:params',
       'fest:param',
+      'fest:attributes',
+      'fest:attribute'
     ]);
     const { attrs, children } = ast;
     return onVisit(storage => {
@@ -61,7 +63,7 @@ function festSpace() {
 
 function festText() {
   return ({ children }) => {
-    // only text nodes
+    // на стороне парсера
     return {
       type: '#text',
       attrs: {},
@@ -80,6 +82,14 @@ function festElement() {
   };
 }
 
+function festAttributes() {
+  return (ast) => ast;
+}
+
+function festAttribute() {
+  return (ast) => ast;
+}
+
 module.exports = {
   festTemplate,
   festValue,
@@ -87,5 +97,7 @@ module.exports = {
   festGet,
   festSpace,
   festText,
-  festElement
+  festElement,
+  festAttributes,
+  festAttribute
 };

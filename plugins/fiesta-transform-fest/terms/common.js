@@ -1,7 +1,10 @@
-function festComment(getVar, getNode, getChildren) {
-  return (ast) => {
-    ast.type = '#comment';
-    return ast;
+function festComment() {
+  return ({ children }) => {
+    return {
+      type: '#comment',
+      attrs: {},
+      children
+    };
   };
 }
 

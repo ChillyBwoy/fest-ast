@@ -34,8 +34,8 @@ function plugin(token, getNode, getChildren) {
     'fest:set': t(terms.festSet),
     'fest:get': t(terms.festGet),
     'fest:element': t(terms.festElement),
-    'fest:attributes': notImplemented,
-    'fest:attribute': notImplemented,
+    'fest:attributes': t(terms.festAttributes),
+    'fest:attribute': t(terms.festAttribute),
     'fest:params': notImplemented,
     'fest:param': notImplemented,
 
@@ -44,9 +44,9 @@ function plugin(token, getNode, getChildren) {
     'fest:for': t(terms.festFor),
     'fest:if': t(terms.festIf),
 
-    'fest:choose': notImplemented,
-    'fest:when': notImplemented,
-    'fest:otherwise': notImplemented,
+    'fest:choose': t(terms.festChoose),
+    // 'fest:when': t(terms.festWhen),
+    // 'fest:otherwise': t(terms.festOtherwise),
 
     // Остальные конструкции
     'fest:cdata': notImplemented,

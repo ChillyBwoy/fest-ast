@@ -1,19 +1,5 @@
-const { festTemplate, festValue, festSet, festGet, festSpace, festText, festElement } = require('./data');
-const { festEach, festFor, festIf } = require('./expr');
-const { festComment } = require('./common');
+const dataTerms = require('./data');
+const exprTerms = require('./expr');
+const commonTerms = require('./common');
 
-module.exports = {
-  festTemplate,
-  festValue,
-  festSet,
-  festGet,
-  festSpace,
-  festText,
-  festElement,
-
-  festEach,
-  festFor,
-  festIf,
-
-  festComment
-};
+module.exports = Object.assign({}, dataTerms, exprTerms, commonTerms);
