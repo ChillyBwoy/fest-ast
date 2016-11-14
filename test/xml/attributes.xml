@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+
+  <div>
+    <fest:attributes>
+      <fest:attribute name="data-one">foo</fest:attribute>
+      <fest:attribute name="data-two">bar</fest:attribute>
+      <fest:attribute name="data-three">baz</fest:attribute>
+      <fest:attribute name="data-four" value="foobaz" />
+    </fest:attributes>
+  </div>
+
+
+<!--
+  <input>
+    <fest:attributes>
+      <fest:if test="false">
+        <fest:attribute name="checked">checked</fest:attribute>
+      </fest:if>
+    </fest:attributes>
+  </input>
+-->
+
+<!--
+  <div data-id="{Math.random() > 0.5 ? 'win' : 'lose'}">
+    <fest:attributes>
+      <fest:attribute name="class">
+        foo
+        <fest:if test="true">
+          <fest:text value=" "/>bar
+        </fest:if>
+      </fest:attribute>
+    </fest:attributes>
+  </div>
+-->
+
+
+  <div>
+    <fest:attributes>
+      <fest:choose>
+        <fest:when test="true">
+          <fest:attribute name="when">true</fest:attribute>
+        </fest:when>
+        <fest:otherwise>
+          <fest:attribute name="when">false</fest:attribute>
+        </fest:otherwise>
+      </fest:choose>
+      <fest:choose>
+        <fest:when test="false">
+          <fest:attribute name="otherwise">false</fest:attribute>
+        </fest:when>
+        <fest:otherwise>
+          <fest:attribute name="otherwise">true</fest:attribute>
+        </fest:otherwise>
+      </fest:choose>
+      <fest:attribute name="&quot;">&quot;</fest:attribute>
+    </fest:attributes>
+  </div>
+
+<!--
+  <fest:set name="class">foo</fest:set>
+
+  <div>
+    <fest:attributes>
+      <fest:attribute name="data-{(true) ? 'k' : 'i'}a{(true) ? 't' : 'u'}a" value="abc{(true) ? 'd' : 'e'}">
+        _efg
+      </fest:attribute>
+      <fest:attribute name="{undefined.undefined}">
+        not_displays
+      </fest:attribute>
+    </fest:attributes>
+  </div>
+ -->
+</fest:template>

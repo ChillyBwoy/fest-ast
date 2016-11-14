@@ -4,88 +4,92 @@
  * @return {[type]}     [description]
  */
 
-function validate(ast) {
-  const { type, children } = ast;
-  const childTypes = Array.isArray(children) ? children.map(c => c.type) : ['#text'];
-
-  function countChildren(types) {
-    return types.reduce((acc, name) => {
-      if (!acc[name]) {
-        acc[name] = 0;
-      }
-      acc[name] += 1
-      return acc;
-    }, {});
-  }
-
-  return {
-    hasChildren(rules = {}) {
-      const counted = countChildren(childTypes);
-
-      Object.keys(rules).forEach(tagName => {
-        const rule = rules[tagName];
-        if (rule.required) {
-          if (!counted[tagName] || counted[tagName] === 0) {
-            throw new Error(`"${tagName}" not found in "${type}"`);
-          }
-        }
-
-        if (rule.min) {
-          if (counted[tagName] && counted[tagName] < rule.min) {
-            throw new Error(`Count of "${tagName}" is less than ${rule.min}`);
-          }
-        }
-
-        if (rule.max) {
-          if (counted[tagName] && counted[tagName] > rule.max) {
-            throw new Error(`Count of "${tagName}" is greater than ${rule.min}`);
-          }
-        }
-      });
-    },
-
-    mustChildren(types = []) {
-      if (types.length === 0) {
-        throw new Error(`no children found inside "${type}"`);
-      }
-    },
-
-    allExceptChildren(types = []) {
-      // можно любые типы
-      if (types.length === 0) {
-        return;
-      }
-
-      // кроме
-      types.forEach(t => {
-        if (childTypes.indexOf(t) !== -1) {
-          throw new Error(`"${t}" inside "${type}"`);
-        }
-      });
-    },
-
-    onlyChildren(types = []) {
-      // нельзя никакие
-      if (types.length === 0) {
-        return;
-      }
-
-      types.forEach(t => {
-        if (childTypes.indexOf(t) === -1) {
-          throw new Error(`"${t}" inside "${type}"`);
-        }
-      });
-    },
-
-    noChildren() {
-      // нельзя никакие
-      if (childTypes.length !== 0) {
-        throw new Error('should not contain children');
-      }
+function countTypes(types) {
+  return types.reduce((acc, name) => {
+    if (!acc[name]) {
+      acc[name] = 0;
     }
-  };
+    acc[name] += 1;
+    return acc;
+  }, {});
 }
 
-module.exports = {
-  validate
-};
+function getTypes(data) {
+  return Array.isArray(data) ? data.map(c => c.type) : ['#text'];
+}
+
+class FestValidator {
+  constructor({ type, attrs, children }) {
+    this._type = type;
+    this._attrs = attrs;
+    this._children = children;
+
+    this._childTypes = getTypes(children);
+    this._childCounted = countTypes(this._childTypes);
+  }
+
+  hasChildren(rules = {}) {
+    Object.keys(rules).forEach(tagName => {
+      const rule = rules[tagName];
+      if (rule.required) {
+        if (!this._childCounted[tagName] || this._childCounted[tagName] === 0) {
+          throw new Error(`"${tagName}" not found in "${this._type}"`);
+        }
+      }
+
+      if (rule.min) {
+        if (this._childCounted[tagName] && this._childCounted[tagName] < rule.min) {
+          throw new Error(`Count of "${tagName}" is less than ${rule.min}`);
+        }
+      }
+
+      if (rule.max) {
+        if (this._childCounted[tagName] && this._childCounted[tagName] > rule.max) {
+          throw new Error(`Count of "${tagName}" is greater than ${rule.min}`);
+        }
+      }
+    });
+  }
+
+  mustChildren(types = []) {
+    if (types.length === 0) {
+      throw new Error(`no children found inside "${this._type}"`);
+    }
+  }
+
+  allExceptChildren(types = []) {
+    // можно любые типы
+    if (types.length === 0) {
+      return;
+    }
+
+    // кроме
+    types.forEach(t => {
+      if (this._childTypes.indexOf(t) !== -1) {
+        throw new Error(`"${t}" inside "${this._type}"`);
+      }
+    });
+  }
+
+  onlyChildren(types = []) {
+    // нельзя никакие
+    if (types.length === 0 || this._children.length === 0) {
+      return;
+    }
+
+    this._childTypes.forEach(ct => {
+      if (types.indexOf(ct) === -1) {
+        throw new Error(`"${ct}" inside "${this._type}"`);
+      }
+    });
+  }
+
+  noChildren() {
+    // нельзя никакие
+    if (this._childTypes.length !== 0) {
+      throw new Error('should not contain children');
+    }
+  }
+}
+
+module.exports = FestValidator;

@@ -1,3 +1,5 @@
+const FestValidator = require('../validator');
+
 function festEach(getVar, getNode, getChildren) {
   return (ast) => {
     const result = getVar();
@@ -65,9 +67,11 @@ function festChoose(getVar, getNode, getChildren) {
     }`;
   };
 
-  return (ast, v) => {
+  return (ast) => {
     const { children } = ast;
-    v.hasChildren({
+    const validator = new FestValidator(ast);
+
+    validator.hasChildren({
       'fest:when': { min: 1, max: Infinity, required: true },
       'fest:otherwise': { max: 1 }
     });

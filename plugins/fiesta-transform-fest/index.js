@@ -1,5 +1,4 @@
 const { createCounter, createStorage } = require('./utils');
-const { validate } = require('./validator');
 
 const terms = require('./terms');
 
@@ -34,8 +33,10 @@ function plugin(token, getNode, getChildren) {
     'fest:set': t(terms.festSet),
     'fest:get': t(terms.festGet),
     'fest:element': t(terms.festElement),
-    'fest:attributes': t(terms.festAttributes),
-    'fest:attribute': t(terms.festAttribute),
+
+    // 'fest:attributes': t(terms.festAttributes),
+    // 'fest:attribute': t(terms.festAttribute),
+
     'fest:params': notImplemented,
     'fest:param': notImplemented,
 
@@ -44,9 +45,7 @@ function plugin(token, getNode, getChildren) {
     'fest:for': t(terms.festFor),
     'fest:if': t(terms.festIf),
 
-    'fest:choose': t(terms.festChoose),
-    // 'fest:when': t(terms.festWhen),
-    // 'fest:otherwise': t(terms.festOtherwise),
+    'fest:choose': t(terms.festChoose), // includes fest:when and fest:otherwise
 
     // Остальные конструкции
     'fest:cdata': notImplemented,
@@ -71,8 +70,7 @@ function plugin(token, getNode, getChildren) {
       const { type } = ast;
 
       if (methods[type]) {
-        const v = validate(ast);
-        return methods[type](ast, v);
+        return methods[type](ast);
       }
 
       return ast;

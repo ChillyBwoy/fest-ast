@@ -1,6 +1,9 @@
+const FestValidator = require('../validator');
+
 function festTemplate(getVar, getNode) {
-  return (ast, v) => {
-    v.allExceptChildren([
+  return (ast) => {
+    const validator = new FestValidator(ast);
+    validator.allExceptChildren([
       'fest:params',
       'fest:param',
       'fest:attributes',
@@ -26,8 +29,9 @@ function festValue() {
 }
 
 function festSet(getVar, getNode, getChildren, onVisit) {
-  return (ast, v) => {
-    v.allExceptChildren([
+  return (ast) => {
+    const validator = new FestValidator(ast);
+    validator.allExceptChildren([
       'fest:params',
       'fest:param',
       'fest:attributes',
@@ -46,16 +50,18 @@ function festSet(getVar, getNode, getChildren, onVisit) {
 }
 
 function festGet(getVar) {
-  return (ast, v) => {
-    v.onlyChildren(['fest:params']);
+  return (ast) => {
+    const validator = new FestValidator(ast);
+    validator.onlyChildren(['fest:params']);
     const { attrs: { name } } = ast;
     return `${getVar('templates')}['${name}']({})`;
   };
 }
 
 function festSpace() {
-  return (ast, v) => {
-    v.noChildren();
+  return (ast) => {
+    const validator = new FestValidator(ast);
+    validator.noChildren();
     const space = ' ';
     return `'${space}'`;
   };
@@ -83,11 +89,46 @@ function festElement() {
 }
 
 function festAttributes() {
-  return (ast) => ast;
+  return (ast) => {
+    const validator = new FestValidator(ast);
+    validator.onlyChildren([
+      'fest:attribute',
+      'fest:each',
+      'fest:choose',
+      'fest:for',
+      'fest:if'
+    ]);
+    return ast;
+  };
 }
 
-function festAttribute() {
-  return (ast) => ast;
+function festAttribute(getVar, getNode, getChildren) {
+  return (ast) => {
+    const { children, attrs: { name, value } } = ast;
+    if (!name) {
+      throw new Error('Invalid name expression for "fest:attribute"');
+    }
+
+    const validator = new FestValidator(ast);
+    validator.onlyChildren([
+      '#text',
+      '#comment',
+      'fest:text',
+      'fest:each',
+      'fest:choose',
+      'fest:for',
+      'fest:if'
+    ]);
+
+    return {
+      type: '#attribute',
+      attrs: {
+        name,
+        value: value ? value : getChildren(children).join('+')
+      },
+      children: []
+    };
+  };
 }
 
 module.exports = {
