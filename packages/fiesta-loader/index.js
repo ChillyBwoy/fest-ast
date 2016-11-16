@@ -1,5 +1,14 @@
-const fiesta = require('@mrgm/fiesta');
+const fiesta = require('@mrgm/fiesta-core');
+const fiestaTransformFest = require('@mrgm/fiesta-transform-fest');
+const fiestaTransformExpr = require('@mrgm/fiesta-transform-expr');
 
-module.exports = function fiesta() {
+const parse = fiesta();
 
-}
+module.exports = function fiestaLoader(source) {
+  const ast = parse(source);
+
+  return ast.transform(
+    fiestaTransformFest,
+    fiestaTransformExpr
+  );
+};
