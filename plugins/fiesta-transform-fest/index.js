@@ -33,7 +33,7 @@ function plugin(token, getNode, getChildren) {
     'fest:set': t(terms.festSet),
     'fest:get': t(terms.festGet),
     'fest:element': t(terms.festElement),
-
+    'fest:insert': t(terms.festInsert),
     // 'fest:attributes': t(terms.festAttributes),
     // 'fest:attribute': t(terms.festAttribute),
 
@@ -53,9 +53,8 @@ function plugin(token, getNode, getChildren) {
     'fest:doctype': notImplemented,
 
     // досвидос, сраный рассадник багов
-    'fest:var': deprecated,
     'fest:include': deprecated,
-    'fest:insert': deprecated,
+    'fest:var': deprecated,
     'fest:script': deprecated
   };
 

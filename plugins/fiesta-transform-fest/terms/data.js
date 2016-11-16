@@ -88,6 +88,14 @@ function festElement() {
   };
 }
 
+function festInsert() {
+  return ({ attrs: { src } }) => {
+    console.log(src);
+    console.log(__dirname);
+    return null;
+  };
+}
+
 function festAttributes() {
   return (ast) => {
     const validator = new FestValidator(ast);
@@ -139,6 +147,7 @@ module.exports = {
   festSpace,
   festText,
   festElement,
+  festInsert,
   festAttributes,
   festAttribute
 };
