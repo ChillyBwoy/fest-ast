@@ -1,8 +1,4 @@
-function pass(ast, options) {
-  // console.log(options);
-  // console.log(JSON.stringify(ast, null, 2));
-  // console.log('=========');
-}
+function pass(ast, options) {}
 
 const plugin = {
   use(config) {

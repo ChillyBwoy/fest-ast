@@ -2,7 +2,7 @@
   "name": "@mrgm/fiesta",
   "version": "1.0.0",
   "description": "",
-  "main": "./lib/fiesta",
+  "main": "./lib",
   "scripts": {
     "generate": "./bin/generate-parser.js > lib/parser.js"
   },
