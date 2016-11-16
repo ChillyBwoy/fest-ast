@@ -8,5 +8,10 @@
     "fiesta-cli": "./bin/fiesta-compile.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@mrgm/fiesta-core": "^1.0.0",
+    "@mrgm/fiesta-transform-fest": "^1.0.0",
+    "@mrgm/fiesta-transform-expr": "^1.0.0"
+  }
 }
