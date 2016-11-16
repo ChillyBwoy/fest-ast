@@ -1,8 +1,8 @@
 const fs = require('fs');
-const fiesta = require('../fiesta-core');
 
-const fiestaTransformFest = require('../fiesta-transform-fest');
-const fiestaTransformExpr = require('../fiesta-transform-expr');
+const fiesta = require('@mrgm/fiesta-core');
+const fiestaTransformFest = require('@mrgm/fiesta-transform-fest');
+const fiestaTransformExpr = require('@mrgm/fiesta-transform-expr');
 
 module.exports = function fiestaCompile(template, args = []) {
   if (template) {

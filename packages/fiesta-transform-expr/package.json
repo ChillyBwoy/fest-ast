@@ -1,0 +1,8 @@
+{
+  "name": "@mrgm/fiesta-transform-expr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
+  "license": "ISC"
+}
