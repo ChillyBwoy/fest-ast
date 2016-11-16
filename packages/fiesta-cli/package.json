@@ -1,0 +1,11 @@
+{
+  "name": "@mrgm/fiesta-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "fiesta-cli": "./bin/fiesta-compile.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

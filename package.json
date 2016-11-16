@@ -1,20 +1,9 @@
 {
-  "name": "@mrgm/fiesta",
+  "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "./packages/fiesta-cli",
-  "scripts": {
-    "generate": "./bin/generate-parser.js > lib/parser.js"
-  },
   "author": "",
   "license": "ISC",
-  "bin": {
-    "fiesta": "./bin/fiesta.js"
-  },
-  "files": [
-    "./lib",
-    "./bin"
-  ],
   "dependencies": {
     "pegjs": "^0.10.0",
     "pegjs-backtrace": "^0.1.1"

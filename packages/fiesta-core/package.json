@@ -1,0 +1,12 @@
+{
+  "name": "@mrgm/fiesta-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
+  "license": "ISC",
+  "dependencies": {
+    "pegjs": "^0.10.0",
+    "pegjs-backtrace": "^0.1.1"
+  },
+}
