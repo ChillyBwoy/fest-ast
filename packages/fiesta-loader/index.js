@@ -6,7 +6,6 @@ const parse = fiesta();
 
 module.exports = function fiestaLoader(source) {
   const ast = parse(source);
-
   return ast.transform(
     fiestaTransformFest,
     fiestaTransformExpr
