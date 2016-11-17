@@ -80,7 +80,7 @@ class Transformer {
     return `module.exports = function (${FUNC_NAME}) {
   ${this.getProlog()}
   return ${tree};
-};`;
+};\n`;
   }
 }
 

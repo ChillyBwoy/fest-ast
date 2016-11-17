@@ -34,8 +34,8 @@ function plugin(token, getNode, getChildren) {
     'fest:get': t(terms.festGet),
     'fest:element': t(terms.festElement),
     'fest:insert': t(terms.festInsert),
-    // 'fest:attributes': t(terms.festAttributes),
-    // 'fest:attribute': t(terms.festAttribute),
+    'fest:attributes': t(terms.festAttributes),
+    'fest:attribute': t(terms.festAttribute),
 
     'fest:params': notImplemented,
     'fest:param': notImplemented,
@@ -58,6 +58,24 @@ function plugin(token, getNode, getChildren) {
     'fest:script': deprecated
   };
 
+  function transform(ast) {
+    if (typeof ast === 'string') {
+      return ast;
+    }
+
+    const { children } = ast;
+
+    if (typeof children === 'string') {
+      return ast;
+    }
+    // const festAttributes = children.filter(x => x.type === 'fest:attributes');
+    // if (festAttributes.length > 0) {
+    //
+    // }
+
+    return ast;
+  }
+
   return {
     getProlog() {
       return `// --- fest prolog ---
@@ -71,8 +89,7 @@ function plugin(token, getNode, getChildren) {
       if (methods[type]) {
         return methods[type](ast);
       }
-
-      return ast;
+      return transform(ast);
     },
     name: 'fest'
   };

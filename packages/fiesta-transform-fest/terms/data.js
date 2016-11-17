@@ -52,7 +52,7 @@ function festSet(getVar, getNode, getChildren, onVisit) {
 function festGet(getVar) {
   return (ast) => {
     const validator = new FestValidator(ast);
-    validator.onlyChildren(['fest:params']);
+    validator.onlyChildren(['fest:params', 'fest:param']);
     const { attrs: { name } } = ast;
     return `${getVar('templates')}['${name}']({})`;
   };
@@ -106,7 +106,14 @@ function festAttributes() {
       'fest:for',
       'fest:if'
     ]);
-    return ast;
+
+    const { children, attrs } = ast;
+
+    return {
+      type: '#attributes',
+      attrs,
+      children
+    };
   };
 }
 

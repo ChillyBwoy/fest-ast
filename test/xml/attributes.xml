@@ -2,7 +2,7 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
 
   <div>
-    <fest:attributes>
+    <fest:attributes id="first">
       <fest:attribute name="data-one">foo</fest:attribute>
       <fest:attribute name="data-two">bar</fest:attribute>
       <fest:attribute name="data-three">baz</fest:attribute>
@@ -34,9 +34,28 @@
   </div>
 -->
 
+<div>
+  <fest:attributes id="second">
+    <fest:choose>
+      <fest:when test="json.a > 42">
+        <fest:attribute name="data-foo">lol</fest:attribute>
+      </fest:when>
+      <fest:when test="json.a < 13">
+        <fest:attribute name="data-key">i-can-has-some</fest:attribute>
+      </fest:when>
+      <fest:when test="json.a === 25">
+        <fest:attribute name="data-baz">no no noe</fest:attribute>
+      </fest:when>
+      <fest:otherwise>
+        <fest:attribute name="data-bar">baz</fest:attribute>
+      </fest:otherwise>
+    </fest:choose>
+  </fest:attributes>
+</div>
 
+<!--
   <div>
-    <fest:attributes>
+    <fest:attributes id="second">
       <fest:choose>
         <fest:when test="true">
           <fest:attribute name="when">true</fest:attribute>
@@ -53,10 +72,11 @@
           <fest:attribute name="otherwise">true</fest:attribute>
         </fest:otherwise>
       </fest:choose>
+
       <fest:attribute name="&quot;">&quot;</fest:attribute>
     </fest:attributes>
   </div>
-
+-->
 <!--
   <fest:set name="class">foo</fest:set>
 

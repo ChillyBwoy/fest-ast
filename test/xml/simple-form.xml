@@ -1,0 +1,28 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+  <div class="container">
+    <form action="./" method="GET">
+      <fieldset>
+        <legend>Person</legend>
+        <div>
+          <label>
+            <input type="text" name="nombre" placeholder="Nombre"/>
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="text" name="apellido" placeholder="Apellido"/>
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="text" name="segundo_apellido" placeholder="Segundo apellido"/>
+          </label>
+        </div>
+      </fieldset>
+
+      <fest:if test="json.done">
+        <h1>done</h1>
+      </fest:if>
+    </form>
+  </div>
+</fest:template>
