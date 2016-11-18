@@ -45,7 +45,8 @@ function fiestaParser(html, options) {
   const parser = new htmlparser.Parser({
     onprocessinginstruction(name, data) {
       if (name.toLowerCase() === '!doctype') {
-        results.push('<' + data + '>'); }
+        results.push('<' + data + '>');
+      }
     },
 
     oncomment(data) {
@@ -84,13 +85,8 @@ function fiestaParser(html, options) {
       if (!Array.isArray(last.children)) {
         last.children = [];
       }
-      if (typeof buf === 'string') {
-        if (isValidStr(buf)) {
-          last.children.push(buf);
-        }
-      } else {
-        last.children.push(buf);
-      }
+
+      last.children.push(buf);
     },
 
     ontext(text) {
@@ -105,9 +101,7 @@ function fiestaParser(html, options) {
         last.children = [];
       }
 
-      if (isValidStr(text)) {
-        last.children.push(text);
-      }
+      last.children.push(text);
     }
   }, options);
 

@@ -71,6 +71,8 @@
       return acc;
     }, {});
   }
+
+  let currentIdentity;
 }
 
 ////////////////////////////////////////////////////
@@ -153,12 +155,18 @@ StartTag
     attrs:Attribute* _ '>'
     & { return true }
     {
+      currentIdentity = type;
       return createNode(type, reduceAttrs(attrs));
     }
 
 EndTag
-  = '</' QualifiedIdentifier _ '>'
-    & { return true }
+  = '</' type:QualifiedIdentifier _ '>'
+    & {
+      // console.log(`${currentIdentity} -> ${type}`);
+      // console.log('----\n');
+      currentIdentity = null
+      return true
+    }
 
 ClosedTag
   = '<' type:QualifiedIdentifier

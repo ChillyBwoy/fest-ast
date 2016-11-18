@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+  <div id="1">
+    <span data-foo="bar"></span>
+  </div>
+</fest:template>
