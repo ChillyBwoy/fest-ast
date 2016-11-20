@@ -16,11 +16,16 @@ class Buffer {
   }
 
   push(obj) {
-    return this._buffer.push(obj);
+    if (obj !== null && typeof obj !== 'undefined') {
+      this._buffer.push(obj);
+    }
+    return this;
   }
 
   flush() {
-    return this._buffer.slice(0);
+    const result = this._buffer.slice(0);
+    this._buffer = [];
+    return result;
   }
 }
 

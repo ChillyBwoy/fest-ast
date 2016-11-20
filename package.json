@@ -5,6 +5,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "js-beautify": "^1.6.4",
     "pegjs": "^0.10.0",
     "pegjs-backtrace": "^0.1.1"
   },

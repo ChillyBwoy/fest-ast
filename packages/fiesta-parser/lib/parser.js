@@ -14,7 +14,8 @@ function expr(type, attrs = {}, children = []) {
   return { type, attrs, children };
 }
 
-function parse(tpl) {
+function createParser(...plugins) {
+  // const plugins =
   const parser = sax.parser(true, {
     xmlns: true,
     lowercase: true
@@ -84,8 +85,10 @@ function parse(tpl) {
   // parser.onattribute = ({ name, value }) => {};
   // parser.onend = () => {};
 
-  parser.write(tpl).close();
-  return results.flush();
+  return (tpl) => {
+    parser.write(tpl).close();
+    return expr('#root', {}, results.flush());
+  };
 }
 
-module.exports = parse;
+module.exports = createParser;

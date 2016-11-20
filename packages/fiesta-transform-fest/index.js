@@ -1,97 +1,15 @@
-const { createCounter, createStorage } = require('./utils');
-
 const terms = require('./terms');
 
-function notImplemented(ast) {
-  throw new Error(`/* Method "${ast.type}" is not implemented yet */`);
-}
-
-function deprecated(ast) {
-  throw new Error(`Method "${ast.type}" is deprecated`);
-}
-
-function term(...args) {
-  return (t) => t(...args);
-}
-
-function plugin(token, getNode, getChildren) {
-  const getVar = createCounter(token, 'v');
-  const templateStorage = createStorage();
-
-  function onVisit(v) {
-    return v(templateStorage);
-  }
-
-  const t = term(getVar, getNode, getChildren, onVisit);
-  const methods = {
-    // Данные и вывод
-    'fest:template': t(terms.festTemplate),
-    'fest:value': t(terms.festValue),
-
-    'fest:text': t(terms.festText),
-    'fest:space': t(terms.festSpace),
-    'fest:set': t(terms.festSet),
-    'fest:get': t(terms.festGet),
-    'fest:element': t(terms.festElement),
-    'fest:insert': t(terms.festInsert),
-    'fest:attributes': t(terms.festAttributes),
-    'fest:attribute': t(terms.festAttribute),
-
-    'fest:params': notImplemented,
-    'fest:param': notImplemented,
-
-    // Управляющие конструкции
-    'fest:each': t(terms.festEach),
-    'fest:for': t(terms.festFor),
-    'fest:if': t(terms.festIf),
-
-    'fest:choose': t(terms.festChoose), // includes fest:when and fest:otherwise
-
-    // Остальные конструкции
-    'fest:cdata': notImplemented,
-    'fest:comment': t(terms.festComment),
-    'fest:doctype': notImplemented,
-
-    // досвидос, сраный рассадник багов
-    'fest:include': deprecated,
-    'fest:var': deprecated,
-    'fest:script': deprecated
-  };
-
-  function transform(ast) {
-    if (typeof ast === 'string') {
-      return ast;
-    }
-
-    const { children } = ast;
-
-    if (typeof children === 'string') {
-      return ast;
-    }
-    // const festAttributes = children.filter(x => x.type === 'fest:attributes');
-    // if (festAttributes.length > 0) {
-    //
-    // }
-
-    return ast;
-  }
-
+function plugin() {
   return {
-    getProlog() {
-      return `// --- fest prolog ---
-  var ${getVar('templates')} = ${templateStorage.getAll()};
-  // --- end of fest prolog ---`;
-    },
-
-    getNode(ast) {
-      const { type } = ast;
-
-      if (methods[type]) {
-        return methods[type](ast);
+    name: 'fest',
+    transform(ast, methods) {
+      let tree;
+      for (const term of terms) {
+        tree = term(ast, methods);
       }
-      return transform(ast);
-    },
-    name: 'fest'
+      return tree;
+    }
   };
 }
 

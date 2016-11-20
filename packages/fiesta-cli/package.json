@@ -5,11 +5,13 @@
   "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
   "main": "index.js",
   "bin": {
-    "fiesta-cli": "./bin/fiesta-compile.js"
+    "fiesta-compile": "./bin/fiesta-compile.js",
+    "fiesta-ast": "./bin/fiesta-ast.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mrgm/fiesta-parser": "^1.0.0",
     "@mrgm/fiesta-core": "^1.0.0",
     "@mrgm/fiesta-transform-fest": "^1.0.0",
     "@mrgm/fiesta-transform-expr": "^1.0.0"

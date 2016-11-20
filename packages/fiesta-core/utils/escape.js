@@ -36,7 +36,6 @@ const STR_MAP = {
 const STR_CHARS_TEST = /[\\'"\/\n\r\t\b\f]/;
 const STR_CHARS = /[\\'"\/\n\r\t\b\f]/g;
 
-
 function createEscape(charsMap, charsTest, chars) {
   function passReplace(chr) {
     return charsMap[chr];
@@ -59,7 +58,7 @@ const escapeHTML = createEscape(HTML_MAP, HTML_CHARS_TEST, HTML_CHARS);
 const escapeStr = createEscape(STR_MAP, STR_CHARS_TEST, STR_CHARS);
 
 module.exports = {
-  js: escapeJS,
-  html: escapeHTML,
-  str: escapeStr
+  escapeJS,
+  escapeHTML,
+  escapeStr
 };
