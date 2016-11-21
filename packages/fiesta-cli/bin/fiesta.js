@@ -14,15 +14,16 @@ if (template) {
   const tpl = fs.readFileSync(template, 'utf8');
   const ast = parse(tpl);
 
-  if (args.indexOf('-t') !== -1) {
+  if (args.indexOf('-a') !== -1) {
     process.stdout.write(JSON.stringify(ast, null, 2));
   } else {
-    const transform = fiesta(ast);
-    const tree = transform(
+    const transform = fiesta(
       fiestaTransformFest,
       fiestaTransformExpr
     );
-    console.log(JSON.stringify(tree, null, 2));
-    // process.stdout.write(JSON.stringify(tree, null, 2));
+
+    const tree = transform(ast);
+
+    process.stdout.write(JSON.stringify(tree, null, 2));
   }
 }

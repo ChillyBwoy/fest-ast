@@ -8,7 +8,7 @@ function hasExpr(str) {
   return r.exec(str) !== null;
 }
 
-function extract(str, patterns = []) {
+function extractRecur(str, patterns = []) {
   if (str.length === 0) {
     return patterns;
   }
@@ -23,13 +23,17 @@ function extract(str, patterns = []) {
   const tail = str.slice(match.index + p.length);
   const next = patterns.concat(head.length ? [wrapStr(head), wrapExpr(cut(p))] : wrapExpr(cut(p)));
 
-  return extract(tail, next);
+  return extractRecur(tail, next);
+}
+
+function extract(str) {
+  return hasExpr(str) ? extractRecur(str).join('+') : str;
 }
 
 function extractObject(obj) {
   return Object.keys(obj).reduce((target, name) => {
     const value = obj[name];
-    target[name] = hasExpr(value) ? extract(value).join('+') : value;
+    target[name] = extract(value);
     return target;
   }, {});
 }
@@ -37,15 +41,15 @@ function extractObject(obj) {
 function plugin() {
   return {
     name: 'expr',
-    transform({ traverse }) {
-      return traverse(node => {
+    transform(ast, { getNodeBy }) {
+      return getNodeBy(node => {
         const { type, attrs, children } = node;
         return {
           type,
           attrs: extractObject(attrs),
-          children
+          children: type === '#text' ? extract(children) : children
         };
-      });
+      }, ast);
     }
   };
 }

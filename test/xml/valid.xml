@@ -1,10 +1,36 @@
 <?xml version="1.0"?>
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
-  <div id="1">
-    <span data-foo="bar" data-call="{42 * 2}"></span>
-    <span data-foo="bar" data-call="{42 * 2} lol this is {Math.random()}"></span>
-    <fest:element name="article">
-      well, hello <fest:value>json.data</fest:value>
-    </fest:element>
-  </div>
+
+  <fest:set name="question">
+    <h3>{params.text}</h3>
+  </fest:set>
+
+  <fest:get name="question">
+    <fest:value>113</fest:value>
+  </fest:get>
+
+  <fest:get name="question">
+    <fest:params>
+      {
+        text: 'А так можно?'
+      }
+    </fest:params>
+  </fest:get>
+
+  <h1 data-static="bar">{json.name}</h1>
+  <h2 data-calc="{42 * 2} lol this is {Math.random()}">{json.subtile}</h2>
+
+  <fest:element name="article">
+    Well,<fest:space />hello there, <fest:value>json.name</fest:value>
+  </fest:element>
+
+  <fest:if test="json.previewIf">
+    <fest:then>HAI!</fest:then>
+  </fest:if>
+
+  <fest:if test="json.previewIfElse">
+    <fest:then>YES</fest:then>
+    <fest:else>NO</fest:else>
+  </fest:if>
+
 </fest:template>

@@ -28,6 +28,9 @@ class Validator {
     this._childCounted = countTypes(this._childTypes);
   }
 
+  /**
+   * Проверяет наличие дочерних узлов на наличие, мин/макс
+   */
   hasChildren(rules = {}) {
     Object.keys(rules).forEach(tagName => {
       const rule = rules[tagName];
@@ -49,18 +52,20 @@ class Validator {
         }
       }
     });
+    return this;
   }
 
   mustChildren(types = []) {
     if (types.length === 0) {
       throw new Error(`no children found inside "${this._type}"`);
     }
+    return this;
   }
 
   allExceptChildren(types = []) {
     // можно любые типы
     if (types.length === 0) {
-      return;
+      return this;
     }
 
     // кроме
@@ -69,19 +74,22 @@ class Validator {
         throw new Error(`"${t}" inside "${this._type}"`);
       }
     });
+
+    return this;
   }
 
   onlyChildren(types = []) {
     // нельзя никакие
     if (types.length === 0 || this._children.length === 0) {
-      return;
+      return this;
     }
 
     this._childTypes.forEach(ct => {
       if (types.indexOf(ct) === -1) {
-        throw new Error(`"${ct}" inside "${this._type}"`);
+        throw new Error(`"${ct}" found inside "${this._type}".\r\nAllowed types: {${types.join(', ')}}`);
       }
     });
+    return this;
   }
 
   noChildren() {
@@ -89,6 +97,7 @@ class Validator {
     if (this._childTypes.length !== 0) {
       throw new Error('should not contain children');
     }
+    return this;
   }
 }
 

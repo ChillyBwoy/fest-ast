@@ -1,6 +1,9 @@
+const { Readable } = require('stream');
+
 const sax = require('sax');
 
 const { Buffer } = require('./buffer');
+const { CHARS } = require('./constants');
 
 function isEmptyString(str) {
   const r = /[^<\n\r]+/g;
@@ -15,14 +18,14 @@ function createParser() {
   const buffer = new Buffer();
   const results = new Buffer();
 
-  const parser = sax.parser(true, {
+  const stream = sax.createStream(true, {
     xmlns: true,
     lowercase: true
   });
-  // parser.onerror = (e) => {};
-  // parser.onattribute = ({ name, value }) => {};
-  // parser.onend = () => {};
-  parser.oncomment = (content) => {
+
+  stream.on('error', err => {});
+
+  stream.on('comment', content => {
     const last = buffer.last();
 
     if (!last) {
@@ -34,9 +37,9 @@ function createParser() {
       last.children = [];
     }
     last.children.push(expr('#comment', {}, content));
-  };
+  });
 
-  parser.ontext = (text) => {
+  stream.on('text', text => {
     const last = buffer.last();
     if (isEmptyString(text)) {
       return;
@@ -51,9 +54,9 @@ function createParser() {
       last.children = [];
     }
     last.children.push(expr('#text', {}, text));
-  };
+  });
 
-  parser.onopentag = (node) => {
+  stream.on('opentag', node => {
     // const { name, attributes, ns, prefix, local, uri, isSelfClosing } = node;
     const { name, attributes } = node;
     const attrs = Object.keys(attributes).reduce((acc, key) => {
@@ -63,9 +66,9 @@ function createParser() {
     }, {});
     const newNode = expr(name, attrs);
     buffer.push(newNode);
-  };
+  });
 
-  parser.onclosetag = () => {
+  stream.on('closetag', name => {
     const buf = buffer.pop();
 
     if (!buffer.length) {
@@ -79,11 +82,22 @@ function createParser() {
     }
 
     last.children.push(buf);
-  };
+  });
+
+  stream.on('end', () => {
+    return expr('#root', {}, results.flush());
+  });
 
   return (tpl) => {
-    parser.write(tpl).close();
-    return expr('#root', {}, results.flush());
+    const r = new Readable();
+    // s._read = function noop() {};
+    r.setEncoding('utf8');
+    r.push(tpl);
+    r.push(null);
+    r.pipe(stream);
+    return {};
+    // console.log(s);
+    // return expr('#root', {}, results.flush());
   };
 }
 

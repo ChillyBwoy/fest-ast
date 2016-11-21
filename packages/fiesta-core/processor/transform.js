@@ -2,7 +2,33 @@ function isNil(x) {
   return x === null || typeof x === 'undefined';
 }
 
-const tree = (ast) => (f) => {
+function normalize(nodes, merged = []) {
+  if (!Array.isArray(nodes)) {
+    return nodes;
+  }
+  if (nodes.length === 0) {
+    return merged;
+  }
+  const [head, ...tail] = nodes;
+  const last = merged.slice(-1)[0];
+
+  let nextNodes = [];
+  if ((typeof head !== 'undefined' && typeof last !== 'undefined') &&
+      (last.type === head.type) && head.type === '#text') {
+    const nextNode = {
+      type: last.type,
+      attrs: {},
+      children: `${last.children}${head.children}`
+    };
+    nextNodes = merged.slice(0, -1).concat(nextNode);
+  } else {
+    nextNodes = merged.concat(head);
+  }
+
+  return normalize(tail, nextNodes);
+}
+
+function getNodeBy(f, ast) {
   function getNode(node) {
     if (typeof node === 'string') {
       return node;
@@ -24,32 +50,18 @@ const tree = (ast) => (f) => {
     return {
       type,
       attrs,
-      children: nextChildren
+      children: normalize(nextChildren)
     };
   }
   return getNode(ast);
-};
-
-function createTransformer(pluginCreators = []) {
-  const plugins = pluginCreators.reduce((acc, plugin) => {
-    if (typeof plugin === 'function') {
-      return acc.concat(plugin());
-    } else if (Array.isArray(plugin)) {
-      // плагин может вернуть просто пачку других плагинов
-      return acc.concat(plugin.map(p => p()));
-    }
-    return acc;
-  }, []);
-
-  return (ast) => {
-    return plugins.reduce((acc, p) => {
-      const x = p.transform({
-        root: acc,
-        traverse: tree(acc)
-      });
-      return x;
-    }, ast);
-  };
 }
 
-module.exports = createTransformer;
+function transform(ast, plugins = []) {
+  return plugins.reduce((acc, p) => {
+    return p.transform(acc, {
+      getNodeBy
+    });
+  }, ast);
+}
+
+module.exports = transform;

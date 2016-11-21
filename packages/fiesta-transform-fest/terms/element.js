@@ -19,23 +19,24 @@
 function festElement() {
   return {
     name: 'fest:element',
-    transform({ traverse }) {
-      return traverse(node => {
+    transform(ast, tree) {
+      return tree.getNodeBy(node => {
         const { type, attrs, children } = node;
 
         if (type === 'fest:element') {
-          if (typeof attrs.name !== 'string') {
+          const { name } = attrs;
+          if (typeof name !== 'string') {
             throw new Error('name attribute is required for "fest:element"');
           }
+          delete attrs.name;
           return {
-            type: attrs.name,
+            type: name,
             attrs,
             children
           };
         }
-
         return node;
-      });
+      }, ast);
     }
   };
 }

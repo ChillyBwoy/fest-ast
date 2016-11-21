@@ -26,10 +26,10 @@ const { Validator } = require('@mrgm/fiesta-core');
 function festTemplate() {
   return {
     name: 'fest:template',
-    transform({ traverse }) {
+    transform(ast, tree) {
       let x = null;
 
-      traverse(node => {
+      const traverse = tree.getNodeBy(node => {
         const { type, attrs, children } = node;
         if (type === 'fest:template') {
           if (x !== null) {
@@ -42,14 +42,10 @@ function festTemplate() {
             'fest:attributes',
             'fest:attribute'
           ]);
-          x = {
-            type: '#root',
-            attrs,
-            children
-          };
+          x = { type: '#root', attrs, children };
         }
         return node;
-      });
+      }, ast);
 
       return x;
     }

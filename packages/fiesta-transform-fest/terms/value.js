@@ -14,14 +14,36 @@
  * <fest:value output="json">value</fest:value><!-- "\"\u003Cscript/\u003E\"" -->
  * ```
  */
-// const { Validator } = require('@mrgm/fiesta-core');
+const { Validator } = require('@mrgm/fiesta-core');
 
-module.exports = {
-  name: 'fest:value',
-  transform(ast, { traverse }) {
-    return traverse(ast, node => {
-      const { type, children } = node;
-      return node;
-    });
-  }
-};
+function festValue() {
+  return {
+    name: 'fest:value',
+    transform(ast, tree) {
+      return tree.getNodeBy(node => {
+        const { type, children } = node;
+        if (type === 'fest:value') {
+          const validator = new Validator(node);
+          validator
+            .onlyChildren(['#text'])
+            .hasChildren({
+              '#text': {
+                required: true,
+                max: 1
+              }
+            });
+
+          const value = children[0].children;
+          return {
+            type: '#text',
+            attrs: {},
+            children: `{${value.trim()}}`
+          };
+        }
+        return node;
+      }, ast);
+    }
+  };
+}
+
+module.exports = festValue;
