@@ -18,7 +18,7 @@ function getTypes(data) {
   return Array.isArray(data) ? data.map(c => c.type) : ['#text'];
 }
 
-class FestValidator {
+class Validator {
   constructor({ type, attrs, children }) {
     this._type = type;
     this._attrs = attrs;
@@ -92,4 +92,4 @@ class FestValidator {
   }
 }
 
-module.exports = FestValidator;
+module.exports = Validator;

@@ -4,5 +4,8 @@
   "description": "",
   "main": "index.js",
   "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@mrgm/fiesta-core": "^1.0.0"
+  }
 }

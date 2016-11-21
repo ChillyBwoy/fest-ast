@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const Parser = require('@mrgm/fiesta-parser');
-const fiesta = require('@mrgm/fiesta-core');
+const { fiesta } = require('@mrgm/fiesta-core');
 
 const fiestaTransformFest = require('@mrgm/fiesta-transform-fest');
+const fiestaTransformExpr = require('@mrgm/fiesta-transform-expr');
 
 const [template, ...args] = process.argv.slice(2);
 
@@ -17,7 +18,10 @@ if (template) {
     process.stdout.write(JSON.stringify(ast, null, 2));
   } else {
     const transform = fiesta(ast);
-    const tree = transform(fiestaTransformFest);
+    const tree = transform(
+      fiestaTransformFest,
+      fiestaTransformExpr
+    );
     console.log(JSON.stringify(tree, null, 2));
     // process.stdout.write(JSON.stringify(tree, null, 2));
   }

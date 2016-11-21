@@ -1,14 +1,19 @@
-const wrapExpr = e => `("" + (${e}))`;
-const wrapStr = s => `"${s}"`;
+const wrapExpr = e => `('' + (${e}))`;
+const wrapStr = s => `('${s}')`;
 
-const PATTERN = /\{[^\{\}\n\r]*?\}/iu;
 const cut = (s) => s.slice(1, -1);
+
+function hasExpr(str) {
+  const r = /\{[^\{\}\n\r]*?\}/iu;
+  return r.exec(str) !== null;
+}
 
 function extract(str, patterns = []) {
   if (str.length === 0) {
     return patterns;
   }
-  const match = PATTERN.exec(str);
+  const r = /\{[^\{\}\n\r]*?\}/iu;
+  const match = r.exec(str);
 
   if (match === null) {
     return patterns.concat(wrapStr(str));
@@ -22,36 +27,26 @@ function extract(str, patterns = []) {
 }
 
 function extractObject(obj) {
-  const kv = Object.keys(obj).map(name => {
-    const value = extract(obj[name]);
-    if (value.length) {
-      return `"${name}": ${value.join('+')}`;
-    }
-    return `"${name}": ""`;
-  });
-  return `{${kv.join(',')}}`;
+  return Object.keys(obj).reduce((target, name) => {
+    const value = obj[name];
+    target[name] = hasExpr(value) ? extract(value).join('+') : value;
+    return target;
+  }, {});
 }
 
 function plugin() {
   return {
-    getProlog() {
-      return '';
-    },
-    getNode(ast) {
-      if (ast === null || typeof ast === 'undefined') {
-        return ast;
-      }
-      if (typeof ast === 'string') {
-        return ast;
-      }
-
-      const { attrs } = ast;
-
-      return Object.assign({}, ast, {
-        attrs: extractObject(attrs)
+    name: 'expr',
+    transform({ traverse }) {
+      return traverse(node => {
+        const { type, attrs, children } = node;
+        return {
+          type,
+          attrs: extractObject(attrs),
+          children
+        };
       });
-    },
-    name: 'expr'
+    }
   };
 }
 

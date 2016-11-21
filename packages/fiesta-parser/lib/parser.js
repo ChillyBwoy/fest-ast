@@ -6,8 +6,9 @@ const { CHARS } = require('./constants');
 const buffer = new Buffer();
 const results = new Buffer();
 
-function notEmptyString(str) {
-  return CHARS.exec(str.trim()) === null;
+function isEmptyString(str) {
+  const r = /[^<\n\r]+/g;
+  return r.exec(str.trim()) === null;
 }
 
 function expr(type, attrs = {}, children = []) {
@@ -15,7 +16,6 @@ function expr(type, attrs = {}, children = []) {
 }
 
 function createParser(...plugins) {
-  // const plugins =
   const parser = sax.parser(true, {
     xmlns: true,
     lowercase: true
@@ -38,8 +38,7 @@ function createParser(...plugins) {
 
   parser.ontext = (text) => {
     const last = buffer.last();
-
-    if (notEmptyString(text)) {
+    if (isEmptyString(text)) {
       return;
     }
 

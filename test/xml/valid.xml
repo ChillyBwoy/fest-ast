@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
   <div id="1">
-    <span data-foo="bar"></span>
+    <span data-foo="bar" data-call="{42 * 2}"></span>
+    <span data-foo="bar" data-call="{42 * 2} lol this is {Math.random()}"></span>
+    <fest:element name="article">
+      well, hello <fest:value>json.data</fest:value>
+    </fest:element>
   </div>
 </fest:template>

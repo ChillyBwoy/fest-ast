@@ -1,4 +1,5 @@
 const createTransformer = require('./processor/transform');
+const Validator = require('./utils/validator');
 
 function fiesta(ast) {
   return (...pluginCreators) => {
@@ -7,4 +8,7 @@ function fiesta(ast) {
   };
 }
 
-module.exports = fiesta;
+module.exports = {
+  fiesta,
+  Validator
+};

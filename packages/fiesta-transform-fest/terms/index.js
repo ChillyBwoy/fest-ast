@@ -1,7 +1,11 @@
-const festTemplate = require('./template');
+const _template = require('./template');
+const _element = require('./element');
+const _value = require('./value');
 
 module.exports = [
-  festTemplate
+  _template,
+  _element,
+  // _value
 ];
 
 // const terms = (traverse) => {

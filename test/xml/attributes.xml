@@ -10,8 +10,6 @@
     </fest:attributes>
   </div>
 
-
-<!--
   <input>
     <fest:attributes>
       <fest:if test="false">
@@ -19,7 +17,6 @@
       </fest:if>
     </fest:attributes>
   </input>
--->
 
 <!--
   <div data-id="{Math.random() > 0.5 ? 'win' : 'lose'}">
