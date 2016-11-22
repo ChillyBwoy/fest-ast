@@ -1,3 +1,6 @@
+const { Validator } = require('@mrgm/fiesta-core');
+
+const TERM_NAME = 'fest:template';
 /**
  * Шаблоны представляют собой XML документы, содержащие HTML, текстовые данные
  * и управляющие конструкции. Шаблон задается парным элементом <fest:template>
@@ -21,19 +24,17 @@
  * Чтобы посмотреть результат работы, приведенных выше шаблонов, необходимо
  * воспользоваться встроенной утилитой fest-render или API библиотеки.
  */
-const { Validator } = require('@mrgm/fiesta-core');
-
 function festTemplate() {
   return {
-    name: 'fest:template',
+    name: TERM_NAME,
     transform(ast, tree) {
       let x = null;
 
-      const traverse = tree.getNodeBy(node => {
-        const { type, attrs, children } = node;
-        if (type === 'fest:template') {
+      tree.getNodeBy(node => {
+        const { type } = node;
+        if (type === TERM_NAME) {
           if (x !== null) {
-            throw new Error('multiple "fest:template" declarations');
+            throw new Error(`multiple ${TERM_NAME} declarations`);
           }
           const validator = new Validator(node);
           validator.allExceptChildren([
@@ -42,13 +43,17 @@ function festTemplate() {
             'fest:attributes',
             'fest:attribute'
           ]);
-          x = { type: '#root', attrs, children };
+          x = node;
         }
         return node;
       }, ast);
 
       return x;
-    }
+    },
+
+    // stringify(ast, stringifier) {
+    //
+    // }
   };
 }
 

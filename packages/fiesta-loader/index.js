@@ -1,13 +1,11 @@
-const fiesta = require('@mrgm/fiesta-core');
-const fiestaTransformFest = require('@mrgm/fiesta-transform-fest');
-const fiestaTransformExpr = require('@mrgm/fiesta-transform-expr');
-
-const parse = fiesta();
+const { fiesta } = require('@mrgm/fiesta-core');
+const fiestaTransformFest = require('@mrgm/fiesta-plugin-fest');
+const fiestaTransformExpr = require('@mrgm/fiesta-plugin-expr');
 
 module.exports = function fiestaLoader(source) {
-  const ast = parse(source);
-  return ast.transform(
+  const compile = fiesta(
     fiestaTransformFest,
     fiestaTransformExpr
   );
+  return compile(source).transform().stringify();
 };

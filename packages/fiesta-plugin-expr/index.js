@@ -1,5 +1,5 @@
-const wrapExpr = e => `('' + (${e}))`;
-const wrapStr = s => `('${s}')`;
+const wrapExpr = e => `("" + (${e}))`;
+const wrapStr = s => `("${s}")`;
 
 const cut = (s) => s.slice(1, -1);
 
@@ -41,16 +41,21 @@ function extractObject(obj) {
 function plugin() {
   return {
     name: 'expr',
+
     transform(ast, { getNodeBy }) {
       return getNodeBy(node => {
         const { type, attrs, children } = node;
         return {
-          type,
+          type: extract(type),
           attrs: extractObject(attrs),
           children: type === '#text' ? extract(children) : children
         };
       }, ast);
-    }
+    },
+
+    // stringify(ast, stringifier) {
+    //   return stringifier.getNode(ast);
+    // }
   };
 }
 

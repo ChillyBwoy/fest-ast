@@ -55,6 +55,7 @@ function createParser() {
 
   parser.onopentag = (node) => {
     // const { name, attributes, ns, prefix, local, uri, isSelfClosing } = node;
+
     const { name, attributes } = node;
     const attrs = Object.keys(attributes).reduce((acc, key) => {
       const attr = attributes[key];

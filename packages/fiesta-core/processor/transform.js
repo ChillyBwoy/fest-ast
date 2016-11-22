@@ -1,19 +1,19 @@
-function isNil(x) {
-  return x === null || typeof x === 'undefined';
-}
+const TOKEN = require('./token');
+
+const { isNil, notNil } = require('../utils/common');
 
 function normalize(nodes, merged = []) {
   if (!Array.isArray(nodes)) {
     return nodes;
   }
   if (nodes.length === 0) {
-    return merged;
+    return merged.filter(notNil);
   }
   const [head, ...tail] = nodes;
   const last = merged.slice(-1)[0];
 
   let nextNodes = [];
-  if ((typeof head !== 'undefined' && typeof last !== 'undefined') &&
+  if ((notNil(head) && notNil(last)) &&
       (last.type === head.type) && head.type === '#text') {
     const nextNode = {
       type: last.type,
@@ -33,7 +33,20 @@ function getNodeBy(f, ast) {
     if (typeof node === 'string') {
       return node;
     }
-    const { type, attrs, children } = f(node);
+    if (isNil(node)) {
+      return null;
+    }
+
+    const nextNode = f(node);
+
+    if (typeof nextNode === 'string') {
+      return nextNode;
+    }
+    if (isNil(nextNode)) {
+      return null;
+    }
+
+    const { type, attrs, children } = nextNode;
 
     let nextChildren;
     if (Array.isArray(children)) {
@@ -59,7 +72,8 @@ function getNodeBy(f, ast) {
 function transform(ast, plugins = []) {
   return plugins.reduce((acc, p) => {
     return p.transform(acc, {
-      getNodeBy
+      getNodeBy,
+      token: TOKEN
     });
   }, ast);
 }

@@ -4,6 +4,7 @@ const _value = require('./value');
 const _space = require('./space');
 const _if = require('./if');
 const _set = require('./set');
+const _comment = require('./comment');
 
 module.exports = {
   terms: [
@@ -12,7 +13,8 @@ module.exports = {
     _value,
     _space,
     _if,
-    _set
+    _set,
+    _comment
   ],
   allowed: [
     // Данные и вывод

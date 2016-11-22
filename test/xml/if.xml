@@ -1,8 +1,13 @@
 <?xml version="1.0"?>
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+
   <fest:if test="json.previewIf">
-    <div>
-      <span>HAI!</span>
-    </div>
+    <fest:then>HAI!</fest:then>
   </fest:if>
+
+  <fest:if test="json.previewIfElse">
+    <fest:then>YES</fest:then>
+    <fest:else>NO</fest:else>
+  </fest:if>
+
 </fest:template>

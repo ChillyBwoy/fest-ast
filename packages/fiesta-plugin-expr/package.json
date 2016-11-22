@@ -1,11 +1,8 @@
 {
-  "name": "@mrgm/fiesta-transform-fest",
+  "name": "@mrgm/fiesta-plugin-expr",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
-  "license": "ISC",
-  "dependencies": {
-    "@mrgm/fiesta-core": "^1.0.0"
-  }
+  "license": "ISC"
 }
