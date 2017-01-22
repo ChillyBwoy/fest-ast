@@ -1,46 +1,50 @@
-const fs = require('fs');
-const path = require('path');
-const peg = require('pegjs');
-const Tracer = require('pegjs-backtrace');
+const parser = require('@mrgm/fiesta-parser');
 
-const createTransformer = require('./transform');
+const transform = require('./processor/transform');
+const stringify = require('./processor/stringify');
+const Validator = require('./utils/validator');
+const source = require('./utils/escape');
 
-const fiestaPlugins = [
-  // require('../plugins/peg-parse-plugins')
-];
-
-const grammar = fs.readFileSync(path.resolve(__dirname, './grammars/fest.pegjs'), 'utf-8');
-const Parser = peg.generate(grammar, {
-  startRule: 'Start',
-  cache: true,
-  optimize: 'speed',
-  trace: true,
-  format: 'commonjs',
-  plugins: fiestaPlugins,
-  dependencies: {
-    escapeSource: path.resolve(__dirname, './utils/escape.js')
-  }
-});
-
-function fiesta() {
-  return (tpl) => {
-    const tracer = new Tracer(tpl, {
-      showTrace: false
-    });
-    try {
-      const ast = Parser.parse(tpl, { tracer });
-      return {
-        ast,
-        transform(...pluginCreators) {
-          const t = createTransformer(pluginCreators);
-          return t(ast);
-        }
-      };
-    } catch (e) {
-      process.stderr.write(`${e.message}`);
-      throw tracer.getBacktraceString();
+function fiesta(...pluginCreators) {
+  // необходимо нормализовать плагины, т.к. плагины могут находиться в массиве
+  const plugins = pluginCreators.reduce((acc, plugin) => {
+    if (typeof plugin === 'function') {
+      return acc.concat(plugin());
+    } else if (Array.isArray(plugin)) {
+      // плагин может вернуть просто пачку других плагинов
+      return acc.concat(plugin.map(p => p()));
     }
-  };
+    return acc;
+  }, []);
+
+  function parse(tpl) {
+    const p = parser();
+    const ast = p(tpl);
+
+    return {
+      toJSON() {
+        return ast;
+      },
+
+      transform() {
+        const tree = transform(ast, plugins);
+        return {
+          toJSON() {
+            return tree;
+          },
+
+          stringify() {
+            return stringify(tree, plugins);
+          }
+        };
+      }
+    };
+  }
+  return parse;
 }
 
-module.exports = fiesta;
+module.exports = {
+  fiesta,
+  source,
+  Validator
+};

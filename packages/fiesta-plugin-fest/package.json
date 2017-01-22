@@ -1,13 +1,11 @@
 {
-  "name": "@mrgm/fiesta-core",
+  "name": "@mrgm/fiesta-plugin-fest",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
   "license": "ISC",
   "dependencies": {
-    "pegjs": "^0.10.0",
-    "pegjs-backtrace": "^0.1.1",
-    "@mrgm/fiesta-parser": "^1.0.0"
+    "@mrgm/fiesta-core": "^1.0.0"
   }
 }

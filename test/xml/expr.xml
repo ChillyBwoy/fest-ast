@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+  <p>Hello, {json.sweet_prince} and welcome to {json.place}!</p>
+  <p data-answer="{json.left}-{json.right}">The answer of life the universe and everything is {json.answer}</p>
+  <p>Good night, {json.sweet_prince}</p>
+</fest:template>
