@@ -1,20 +1,13 @@
 {
-  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "js-beautify": "^1.6.4",
-    "pegjs": "^0.10.0",
-    "pegjs-backtrace": "^0.1.1"
-  },
+  "description": "@mrgm/fiesta",
+  "private": true,
+  "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
+  "license": "MIT",
   "devDependencies": {
-    "eslint": "^3.9.1",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-import": "^2.0.1",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.5.0",
-    "lerna": "2.0.0-beta.30"
+    "js-beautify": "^1.6.9"
+  },
+  "dependencies": {
+    "sax": "^1.2.2"
   }
 }
