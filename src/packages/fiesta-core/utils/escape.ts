@@ -53,12 +53,6 @@ function createEscape(charsMap, charsTest, chars) {
   };
 }
 
-const escapeJS = createEscape(JS_MAP, JS_CHARS_TEST, JS_CHARS);
-const escapeHTML = createEscape(HTML_MAP, HTML_CHARS_TEST, HTML_CHARS);
-const escapeStr = createEscape(STR_MAP, STR_CHARS_TEST, STR_CHARS);
-
-module.exports = {
-  escapeJS,
-  escapeHTML,
-  escapeStr
-};
+export const escapeJS = createEscape(JS_MAP, JS_CHARS_TEST, JS_CHARS);
+export const escapeHTML = createEscape(HTML_MAP, HTML_CHARS_TEST, HTML_CHARS);
+export const escapeStr = createEscape(STR_MAP, STR_CHARS_TEST, STR_CHARS);
