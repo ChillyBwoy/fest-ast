@@ -17,6 +17,7 @@
     "target": "es5"
   },
   "files": [
+    "./src/packages/fiesta-core/index.ts"
   ],
   "exclude": [
     "node_modules"

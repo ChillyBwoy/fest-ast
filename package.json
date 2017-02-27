@@ -5,9 +5,11 @@
   "author": "Eugene Cheltsov <e.cheltsov@corp.mail.ru>",
   "license": "MIT",
   "devDependencies": {
-    "js-beautify": "^1.6.9"
+    "js-beautify": "^1.6.9",
+    "typescript": "^2.2.1"
   },
   "dependencies": {
+    "@types/node": "^7.0.5",
     "sax": "^1.2.2"
   }
 }
