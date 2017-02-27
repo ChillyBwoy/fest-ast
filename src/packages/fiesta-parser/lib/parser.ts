@@ -71,7 +71,6 @@ export function createParser() {
 
     const { name, attributes } = node;
     const attrNames = Object.keys(attributes);
-
     const attrs = Object.keys(attributes).reduce((acc, key) => {
       const attr = attributes[key];
       acc[attr.name] = attr.value;

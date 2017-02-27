@@ -1,4 +1,11 @@
-export type FiestaASTType = string;
+import { TagHTML } from "./tags";
+
+export type FiestaASTSpecialType
+  = "#text"
+  | "#comment"
+  | "#cdata";
+
+export type FiestaASTType = TagHTML | FiestaASTSpecialType;
 
 export type FiestaASTAttr = string;
 
@@ -10,8 +17,4 @@ export interface FiestaASTNode {
   type: FiestaASTType;
   attrs: FiestaASTAttrs;
   children: FiestaASTNode[];
-}
-
-export interface FiestaPlugin {
-  name: string;
 }
